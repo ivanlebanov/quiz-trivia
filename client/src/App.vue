@@ -20,6 +20,8 @@ export default {
   watch: {
     'user': function(newVal, oldVal) {
       if(newVal != null){
+        this.$socket.emit('SET_SOCKET_USER', newVal._id)
+        this.$store.dispatch("category/getCategories")
       }
     }
   },
@@ -32,7 +34,7 @@ export default {
     }
   },
   mounted(){
-    //this.$store.dispatch("user/getUser")
+    this.$store.dispatch("user/getCurrentUser")
   },
   computed: {
     ...mapGetters("user", ["user", "id"]),
@@ -65,6 +67,12 @@ html, body{
   font-display: swap;
 }
 
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+html {
+  box-sizing: border-box;
+}
 *, *:before, *:after {
   box-sizing: inherit;
 }
@@ -123,7 +131,7 @@ input[type="text"], input[type="number"]{
   width: 100%;
   float: left;
   padding: 15px 10px;
-  margin: 0 0 15px;
+  margin: 5px 0 15px;
   border: 0;
   border: 2px solid;
   -webkit-transition: all .3s ease-in-out;
@@ -132,16 +140,52 @@ input[type="text"], input[type="number"]{
   transition: all .3s ease-in-out;
   box-shadow: 0;
   position: relative;
+  display: block;
   top: 0;
   &:focus{
-    border-color: #00adb5;
-    top: -5px;
     box-shadow: 0 1px 20px 0 rgba(46,61,73,.2);
   }
   &:hover, &:focus{
     outline: none;
 
   }
+}
+.card{
+  -webkit-box-flex: 1;
+    -ms-flex: 1 1 100%;
+    flex: 1 1 100%;
+    margin: 15px;
+    z-index: 499;
+    z-index: calc(500 - 1);
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    border: none;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 25px 25px 25px;
+    background-color: #fff;
+    border-radius: 8px;
+    -webkit-box-shadow: 0 13px 27px -5px rgba(50,50,93,0.25), 0 8px 16px -8px rgba(0,0,0,0.3);
+    box-shadow: 0 13px 27px -5px rgba(50,50,93,0.25), 0 8px 16px -8px rgba(0,0,0,0.3);
+    -webkit-transition-property: color,background-color,-webkit-box-shadow,-webkit-transform;
+    transition-property: color,background-color,-webkit-box-shadow,-webkit-transform;
+    transition-property: color,background-color,box-shadow,transform;
+    transition-property: color,background-color,box-shadow,transform,-webkit-box-shadow,-webkit-transform;
+    -webkit-transition-duration: .15s;
+    transition-duration: .15s;
+    color: #000;
+    &:hover{
+      webkit-box-shadow: 0 30px 60px -12px rgba(50,50,93,0.25),0 18px 36px -18px rgba(0,0,0,0.3);
+      box-shadow: 0 30px 60px -12px rgba(50,50,93,0.25), 0 18px 36px -18px rgba(0,0,0,0.3);
+    }
 }
 #app{
   min-height: 100vh;

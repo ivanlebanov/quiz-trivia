@@ -10,6 +10,7 @@
         <div class="col-md-7">
           <!--  navigation elements -->
           <ul>
+            <li>{{ user.firstName }} {{ user.lastName }}</li>
             <li>
               <a href="#" @click.prevent.default="logout">logout</a>
             </li>
@@ -43,6 +44,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters("user", ["user", "id"]),
   }
 }
 </script>
@@ -60,7 +62,7 @@ export default {
     li{
       float: left;
       display: block;
-      margin-left: 5px;
+      margin-left: 15px;
       position: relative;
     }
     a{

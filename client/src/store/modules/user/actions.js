@@ -95,6 +95,7 @@ export default {
             axios.defaults.headers.common['x-access-token'] = state.token
             commit('SET_USER', data.data)
           }else{
+            //alert();
             dispatch('logout');
           }
         })

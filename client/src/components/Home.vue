@@ -12,7 +12,6 @@
       <input type="text" v-model="form.password">
       <button type="submit" name="button">add</button>
     </form> -->
-
     <div class="center-vertical" v-if="!user && !id">
       <div class="container ">
         <div class="col-md-5">
@@ -27,22 +26,39 @@
 
     <div class="center-vertical" v-if="user && id">
       <div class="container ">
-        <div class="col-md-5">
-          <div>
-            <h1>Hi, {{ user.firstName }} {{ user.lastName }}!</h1>
+        <div class="row">
+          <div class="col-md-12">
+              <!-- <h1>Hi, {{ user.firstName }} {{ user.lastName }}!</h1> -->
           </div>
-            <div class="card">
-              <div class="card-body">
-                <h3>Create a game</h3>
-                <form @submit.prevent="createGame">
-                  <input type="text" v-model="form.category" placeholder="Category">
-                  <input type="number" v-model="form.questions" max="30" min="1" placeholder="Number of questions">
-                  <input type="number" v-model="form.time_per_questions" min="10" placeholder="Time per question">
-                  <button type="submit" name="button" class="btn">create game</button>
-                </form>
+        </div>
+        <div class="row">
+          <div class="col-md-5">
+              <div class="card">
+                  <h3>Create a game</h3>
+                  <form @submit.prevent="createGame">
+                    <!-- <input type="text" v-model="form.category" placeholder="Category"> -->
+                    <label>Category</label>
+                    <v-select label="name" :v-model="form.category" placeholder="Category" :options="categories"></v-select>
+                    <label class="label">Number of questions</label>
+                    <input type="number" v-model="form.questions" max="30" min="1" placeholder="Number of questions">
+                    <label class="label">Time per question(in seconds)</label>
+                    <input type="number" v-model="form.time_per_questions" min="10" placeholder="Time per question(in seconds)">
+                    <button type="submit" name="button" class="btn">create game</button>
+                  </form>
               </div>
             </div>
-          </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-5">
+                <div class="card">
+                    <h3>Join a game</h3>
+                    <form @submit.prevent="joinGame">
+                      <label>Room Number</label>
+                      <input type="text" v-model="join" max="30" min="1" placeholder="Room Number">
+                      <button type="submit" name="button" class="btn">join</button>
+                    </form>
+                </div>
+              </div>
+            </div>
         </div>
       </div>
 
@@ -51,7 +67,6 @@
 
 <script>
 import axios from 'axios'
-
 import {
   mapGetters
 } from "vuex";
@@ -67,9 +82,10 @@ export default {
   data(){
     return {
       form: {
-        category: '',
+        category: null,
         password: '',
-        questions: 1
+        questions: 1,
+        join: ''
       },
       people:[
         {
@@ -113,9 +129,8 @@ export default {
       }
 
     },
-    add(){
-      console.log(this.form);
-      this.$store.dispatch("user/addUser", this.form);
+    createGame(){
+      this.$store.dispatch("user/createGame", this.form);
     },
     create () {
       //this.$store.dispatch("user/addUser", this.form);
@@ -123,6 +138,7 @@ export default {
   },
   computed: {
     ...mapGetters("user", ["user", "id"]),
+    ...mapGetters("category", ["categories"]),
   }
 }
 </script>
@@ -131,5 +147,24 @@ export default {
   .hello{
     float: left;
     width: 100%;
+  }
+  h1{
+    text-align: center;
+  }
+  .label{
+    float: left;
+    display: block;
+    width: 100%;
+    clear: both;
+  }
+  body .v-select{
+    margin-top: 5px;
+    background: #fff;
+    border: 2px solid #000;
+    padding: 10px 10px;
+    margin-bottom: 15px;
+   .dropdown-toggle{
+     border: none;
+   }
   }
 </style>
