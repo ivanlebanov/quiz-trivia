@@ -53,6 +53,7 @@ io.on('connection', function (socket) {
     io.emit('USERS_ONLINE', onlineUsers)
   })
 })
+let room = require('./room.js')(io)
 
 app.get('/', (req, res) => res.sendStatus(200))
 app.post('/auth/google', user.google_callback)
@@ -61,3 +62,4 @@ app.get('/user/:token', user.getByTokenOrId)
 app.post('/user', user.add)
 app.post('/categories/sync', category.sync)
 app.get('/categories', category.list)
+app.post('/room', room.add)

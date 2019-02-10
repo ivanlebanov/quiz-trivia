@@ -38,7 +38,7 @@
                   <form @submit.prevent="createGame">
                     <!-- <input type="text" v-model="form.category" placeholder="Category"> -->
                     <label>Category</label>
-                    <v-select label="name" :v-model="form.category" placeholder="Category" :options="categories"></v-select>
+                    <v-select label="name" v-model="form.category" placeholder="Category" :options="categories"></v-select>
                     <label class="label">Number of questions</label>
                     <input type="number" v-model="form.questions" max="30" min="1" placeholder="Number of questions">
                     <label class="label">Time per question(in seconds)</label>
@@ -84,9 +84,9 @@ export default {
       form: {
         category: null,
         password: '',
-        questions: 1,
-        join: ''
+        questions: 1
       },
+      join: '',
       people:[
         {
           name: 'a name'
@@ -130,7 +130,10 @@ export default {
 
     },
     createGame(){
-      this.$store.dispatch("user/createGame", this.form);
+      this.$store.dispatch("room/createGame", this.form);
+    },
+    joinGame(){
+      this.$store.dispatch("room/joinGame", {join: this.join});
     },
     create () {
       //this.$store.dispatch("user/addUser", this.form);
