@@ -21,7 +21,10 @@ export default {
   },
   REMOVE_TOKEN(state) {
     state.g_token = null;
-    state.user = null;
+    state.user = {just_deleted: 1};
     state.id = null;
+    setTimeout( function() {
+      state.user = null;
+    }, 1000)
   }
 };

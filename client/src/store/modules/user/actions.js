@@ -11,9 +11,10 @@ export default {
     if(gapi.auth2){
       gapi.auth2.getAuthInstance().disconnect();
     }
-  
+
+    commit('REMOVE_TOKEN');
     setTimeout(function() {
-      commit('REMOVE_TOKEN');
+
       localStorage.removeItem("id");
       localStorage.removeItem("g_token");
       if(!data){
@@ -47,9 +48,10 @@ export default {
   }, data) {
     axios.post('http://localhost:3000/auth/google', data)
       .then(data => {
+        axios.defaults.headers.common['x-access-token'] = data.data.token;
         dispatch('setToken', data.data.token);
         dispatch('setId', data.data.id);
-        dispatch('getUser', data.data.token);
+        dispatch('getCurrentUser', data.data.id);
       })
       .catch(r => {
         dispatch('logout', true);
@@ -80,19 +82,30 @@ export default {
       name: 'Home'
     });
   },
-  async getUser({
+  async getCurrentUser({
     state,
     commit,
     dispatch
   }, data) {
     if (state.g_token) {
-      let user = await axios.get('http://localhost:3000/user/' + state.g_token || data)
-      if (user.data) {
-        commit('SET_USER', user.data)
-      }
+
+      axios.get('http://localhost:3000/user/' + state.id)
+        .then(data => {
+          if (data.data) {
+            axios.defaults.headers.common['x-access-token'] = state.token
+            commit('SET_USER', data.data)
+          }else{
+            dispatch('logout');
+          }
+        })
+        .catch(r => {
+          //alert();
+          dispatch('logout');
+        })
+
+    }else{
+      //dispatch('logout');
     }
-
-
   },
 
   async addUser({

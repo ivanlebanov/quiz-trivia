@@ -11,10 +11,7 @@
           <!--  navigation elements -->
           <ul>
             <li>
-              <router-link :to="{ name: '', params: {} }">item 1</router-link>
-            </li>
-            <li>
-              <router-link :to="{ name: '', params: {} }">other item</router-link>
+              <a href="#" @click.prevent.default="logout">logout</a>
             </li>
           </ul>
         </div>
@@ -35,6 +32,15 @@ export default {
         suggestions: [],
         delay: 500
       }
+  },
+  methods: {
+    logout (){
+      this.$store.dispatch("user/logout");
+      this.$socket.emit('disconnect');
+      setTimeout(function() {
+        location.reload();
+      }, 1000)
+    }
   },
   computed: {
   }

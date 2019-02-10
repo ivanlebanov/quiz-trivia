@@ -12,5 +12,8 @@ export default {
   },
   id: (state) => {
     return state.id;
+  },
+  g_token: (state) => {
+    return state.g_token;
   }
 };

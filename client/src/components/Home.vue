@@ -13,13 +13,23 @@
       <button type="submit" name="button">add</button>
     </form> -->
 
-    <div class="center-vertical">
+    <div class="center-vertical" v-if="!user && !id">
       <div class="container ">
         <div class="col-md-5">
           <div>
             <h1>Trivia quiz</h1>
             <p>Play real time with your friends.</p>
             <div id="google-signin-btn"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="center-vertical" v-if="user && id">
+      <div class="container ">
+        <div class="col-md-5">
+          <div>
+            <h1>Hi, {{ user.firstName }} {{ user.lastName }}!</h1>
           </div>
         </div>
       </div>
@@ -73,6 +83,24 @@ export default {
         })
       }
     },
+    onSignIn(googleUser) {
+      var profile = googleUser.getBasicProfile();
+
+      var id_token = googleUser.getAuthResponse().id_token;
+
+      let profile_obj = {
+        givenName: profile.getGivenName(),
+        familyName: profile.getFamilyName(),
+        avatar: profile.getImageUrl(),
+        email: profile.getEmail(),
+        token: id_token
+      };
+      console.log(profile_obj);
+      if((!this.id && !this.user )|| !this.user.just_deleted){
+        this.$store.dispatch("user/login", profile_obj);
+      }
+
+    },
     add(){
       console.log(this.form);
       this.$store.dispatch("user/addUser", this.form);
@@ -81,7 +109,9 @@ export default {
       //this.$store.dispatch("user/addUser", this.form);
     }
   },
-  computed: {}
+  computed: {
+    ...mapGetters("user", ["user", "id"]),
+  }
 }
 </script>
 
