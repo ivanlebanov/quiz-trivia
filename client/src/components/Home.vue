@@ -31,9 +31,20 @@
           <div>
             <h1>Hi, {{ user.firstName }} {{ user.lastName }}!</h1>
           </div>
+            <div class="card">
+              <div class="card-body">
+                <h3>Create a game</h3>
+                <form @submit.prevent="createGame">
+                  <input type="text" v-model="form.category" placeholder="Category">
+                  <input type="number" v-model="form.questions" max="30" min="1" placeholder="Number of questions">
+                  <input type="number" v-model="form.time_per_questions" min="10" placeholder="Time per question">
+                  <button type="submit" name="button" class="btn">create game</button>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
   </div>
 </template>
@@ -56,8 +67,9 @@ export default {
   data(){
     return {
       form: {
-        username: '',
-        password: ''
+        category: '',
+        password: '',
+        questions: 1
       },
       people:[
         {
