@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="bootstrap-wrapper">
-    <Navigation />
+    <Navigation v-if="user"/>
     <router-view />
     <notifications group="foo" position="top right" :duration="num"></notifications>
   </div>
@@ -35,7 +35,7 @@ export default {
     //this.$store.dispatch("user/getUser")
   },
   computed: {
-    //...mapGetters("user", ["user", "id"]),
+    ...mapGetters("user", ["user", "id"]),
   }
 }
 </script>
@@ -45,30 +45,21 @@ export default {
 @import "../node_modules/bootstrap-grid-only-css/dist/css/bootstrap-grid.min.css";
 
 /* playfair-display-regular - latin */
+/* latin-ext */
 @font-face {
-  font-family: 'Playfair Display';
+  font-family: 'Lato';
   font-style: normal;
   font-weight: 400;
-  src: url('../fonts/playfair-display-v13-latin-regular.eot'); /* IE9 Compat Modes */
-  src: local('Playfair Display Regular'), local('PlayfairDisplay-Regular'),
-       url('../fonts/playfair-display-v13-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('../fonts/playfair-display-v13-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
-       url('../fonts/playfair-display-v13-latin-regular.woff') format('woff'), /* Modern Browsers */
-       url('../fonts/playfair-display-v13-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('../fonts/playfair-display-v13-latin-regular.svg#PlayfairDisplay') format('svg'); /* Legacy iOS */
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
-/* archivo-regular - latin */
+/* latin */
 @font-face {
-  font-family: 'Archivo';
+  font-family: 'Lato';
   font-style: normal;
   font-weight: 400;
-  src: url('../fonts/archivo-v3-latin-regular.eot'); /* IE9 Compat Modes */
-  src: local('Archivo Regular'), local('Archivo-Regular'),
-       url('../fonts/archivo-v3-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('../fonts/archivo-v3-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
-       url('../fonts/archivo-v3-latin-regular.woff') format('woff'), /* Modern Browsers */
-       url('../fonts/archivo-v3-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('../fonts/archivo-v3-latin-regular.svg#Archivo') format('svg'); /* Legacy iOS */
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 html, body{
   font-display: swap;
@@ -125,7 +116,7 @@ body .btn-rounded{
   -moz-osx-font-smoothing: grayscale;
 }
 h1, h2, h3, h4, h5, h6{
-  font-family: "Playfair Display", sans-serif;
+  font-family: "Lato", sans-serif;
   font-weight: 400;
 }
 input[type="text"], input[type="number"]{
@@ -152,6 +143,13 @@ input[type="text"], input[type="number"]{
 
   }
 }
+#app{
+  min-height: 100vh;
+  background: #2193b0;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #6dd5ed, #2193b0);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #6dd5ed, #2193b0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
 .center-vertical{
   width: 100%;
   position: absolute;
@@ -159,6 +157,7 @@ input[type="text"], input[type="number"]{
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+  color: #fff;
 }
 .panel{
   background: #fff;

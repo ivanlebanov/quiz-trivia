@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <h1>Hi</h1>
+    <!-- <h1>Hi</h1>
     <ul>
       <li v-for="person in people">
         {{ person.name }}
@@ -11,7 +11,20 @@
       <input type="text" v-model="form.username">
       <input type="text" v-model="form.password">
       <button type="submit" name="button">add</button>
-    </form>
+    </form> -->
+
+    <div class="center-vertical">
+      <div class="container ">
+        <div class="col-md-5">
+          <div>
+            <h1>Trivia quiz</h1>
+            <p>Play real time with your friends.</p>
+            <div id="google-signin-btn"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -26,6 +39,9 @@ export default {
   components: {},
   created(){
 
+  },
+  mounted(){
+    this.getInfo();
   },
   data(){
     return {
@@ -44,6 +60,19 @@ export default {
     }
   },
   methods: {
+    getInfo(){
+      if(!gapi && !loaded){
+        let that = this;
+        setTimeout(function() {
+          that.getInfo();
+        }, 1000)
+      }else{
+        this.loaded = true;
+        gapi.signin2.render('google-signin-btn', { // this is the button "id"
+          onsuccess: this.onSignIn // note, no "()" here
+        })
+      }
+    },
     add(){
       console.log(this.form);
       this.$store.dispatch("user/addUser", this.form);
