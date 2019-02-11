@@ -169,7 +169,6 @@ input[type="text"], input[type="number"]{
     -webkit-box-pack: center;
     -ms-flex-pack: center;
     justify-content: center;
-    overflow: hidden;
     padding: 25px 25px 25px;
     background-color: #fff;
     border-radius: 8px;
