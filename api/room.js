@@ -8,7 +8,7 @@ module.exports = function (io) {
     axios.get(`https://opentdb.com/api.php?amount=${req.body.questions}&category=${req.body.category.id}`)
       .then(response => {
         let roomObj = new Room({
-          creator: req.userId,
+          created_by: req.userId,
           category: req.body.category._id || null,
           questions: req.body.questions,
           time_per_questions: req.body.time_per_questions,

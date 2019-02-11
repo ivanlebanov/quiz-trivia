@@ -12,7 +12,7 @@
       <input type="text" v-model="form.password">
       <button type="submit" name="button">add</button>
     </form> -->
-    <div class="center-vertical" v-if="!user && !id">
+    <div class="center-vertical" v-if="!loggedIn">
       <div class="container ">
         <div class="col-md-5">
           <div>
@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <div class="center-vertical" v-if="user && id">
+    <div class="center-vertical" v-if="user && id && loggedIn">
       <div class="container ">
         <div class="row">
           <div class="col-md-12">
@@ -94,8 +94,10 @@ export default {
         {
           name: 'a second name'
         }
-      ]
+      ],
+      loggedIn: false
     }
+
   },
   methods: {
     getInfo(){
@@ -123,9 +125,9 @@ export default {
         email: profile.getEmail(),
         token: id_token
       };
-      console.log(profile_obj);
-      if((!this.id && !this.user )|| !this.user.just_deleted){
+      if((!this.id && !this.user ) || !this.user.just_deleted){
         this.$store.dispatch("user/login", profile_obj);
+        this.loggedIn = true
       }
 
     },
@@ -150,9 +152,6 @@ export default {
   .hello{
     float: left;
     width: 100%;
-  }
-  h1{
-    text-align: center;
   }
   .label{
     float: left;

@@ -17,6 +17,9 @@ export default {
           params: {code: room.data.code}
         })
       })
+      .catch(r => {
+        //dispatch("user/logout", null, { root:true })
+      })
   }
 
 };

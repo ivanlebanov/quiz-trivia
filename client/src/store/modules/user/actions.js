@@ -47,11 +47,11 @@ export default {
     dispatch
   }, data) {
     axios.post('http://localhost:3000/auth/google', data)
-      .then(data => {
-        axios.defaults.headers.common['x-access-token'] = data.data.token;
-        dispatch('setToken', data.data.token);
-        dispatch('setId', data.data.id);
-        dispatch('getCurrentUser', data.data.id);
+      .then(dataObj => {
+        axios.defaults.headers.common['x-access-token'] = dataObj.data.token;
+        dispatch('setToken', dataObj.data.token);
+        dispatch('setId', dataObj.data.id);
+        dispatch('getCurrentUser', dataObj.data.id);
       })
       .catch(r => {
         dispatch('logout', true);
@@ -92,7 +92,10 @@ export default {
       axios.get('http://localhost:3000/user/' + state.id)
         .then(data => {
           if (data.data) {
-            axios.defaults.headers.common['x-access-token'] = state.token
+            if(state.token){
+              axios.defaults.headers.common['x-access-token'] = state.token
+            }
+
             commit('SET_USER', data.data)
           }else{
             //alert();

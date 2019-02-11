@@ -33,7 +33,7 @@ export default {
       num: 5000
     }
   },
-  mounted(){
+  created(){
     this.$store.dispatch("user/getCurrentUser")
   },
   computed: {
