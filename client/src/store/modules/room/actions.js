@@ -11,8 +11,11 @@ export default {
     dispatch
   }, data) {
     axios.post('http://localhost:3000/room', data)
-      .then(categories => {
-        console.log(categories)
+      .then(room => {
+        router.push({
+          name: 'RoomLobby',
+          params: {code: room.data.code}
+        })
       })
   }
 

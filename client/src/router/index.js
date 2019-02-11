@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
+import RoomLobby from '@/components/RoomLobby'
 import store from '@/store'
 Vue.use(Router)
 
@@ -8,11 +9,18 @@ let router;
 
 export default router = new Router({
   mode: 'history',
-  routes: [{
-    path: '/',
-    name: 'Home',
-    component: Home
-  }]
+  routes: [
+    {
+      path: '/',
+      name: 'Home',
+      component: Home
+    },
+    {
+      path: '/room/lobby/:code',
+      name: 'RoomLobby',
+      component: RoomLobby
+    }
+  ]
 })
 
 // router.beforeEach((to, from, next) => {
