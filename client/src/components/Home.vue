@@ -42,7 +42,7 @@
                     <label class="label">Number of questions</label>
                     <input type="number" v-model="form.questions" max="30" min="1" placeholder="Number of questions">
                     <label class="label">Time per question(in seconds)</label>
-                    <input type="number" v-model="form.time_per_questions" min="10" placeholder="Time per question(in seconds)">
+                    <input type="number" v-model="form.time_per_questions" min="10" max="120" placeholder="Time per question(in seconds)">
                     <button type="submit" name="button" class="btn">create game</button>
                   </form>
               </div>
