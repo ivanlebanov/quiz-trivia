@@ -74,11 +74,14 @@ export default {
   name: 'Home',
   components: {},
   watch: {
-    'categories': function(newVal, oldVal) {
-      if(newVal != null){
-        this.form.category = this.categories[0]
-      }
+  'categories': function(newVal, oldVal) {
+    if(newVal != null){
+      this.form.category = this.categories[0]
     }
+  }
+},
+  created(){
+
   },
   mounted(){
     this.getInfo();
@@ -140,7 +143,7 @@ export default {
       this.$store.dispatch("room/createGame", this.form);
     },
     joinGame(){
-      this.$store.dispatch("room/joinGame", {join: this.join});
+      this.$store.dispatch("room/joinGame", {code: this.join});
     },
     create () {
       //this.$store.dispatch("user/addUser", this.form);

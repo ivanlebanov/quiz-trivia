@@ -28,6 +28,14 @@ var roomSchema = mongoose.Schema({
       incorrect_answers: { type: String }
     }
   ],
+  participants: [
+    {
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      }
+    }
+  ],
   code: {
     type: String,
     required: true,
