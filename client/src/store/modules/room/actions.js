@@ -28,7 +28,7 @@ export default {
     commit,
     dispatch
   }, data) {
-    axios.put(`http://localhost:3000/room/${data.join}`)
+    axios.put(`http://localhost:3000/room/${data.code}`)
       .then(room => {
         alert();
         router.push({
