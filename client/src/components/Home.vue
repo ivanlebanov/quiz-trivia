@@ -73,8 +73,12 @@ import {
 export default {
   name: 'Home',
   components: {},
-  created(){
-
+  watch: {
+    'categories': function(newVal, oldVal) {
+      if(newVal != null){
+        this.form.category = this.categories[0]
+      }
+    }
   },
   mounted(){
     this.getInfo();
@@ -84,7 +88,8 @@ export default {
       form: {
         category: null,
         password: '',
-        questions: 1
+        questions: 5,
+        time_per_questions: 30
       },
       join: '',
       people:[
