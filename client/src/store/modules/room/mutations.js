@@ -3,5 +3,8 @@ import router from "../../../router";
 export default {
   SET_ROOMS(state, data) {
     state.rooms = data;
+  },
+  SET_CURRENT_ROOM(state, data) {
+    state.currentRoom = data;
   }
 };

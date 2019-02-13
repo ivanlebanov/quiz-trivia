@@ -11,8 +11,12 @@
           <!--  navigation elements -->
           <ul>
             <li>{{ user.firstName }} {{ user.lastName }}</li>
+            <!-- todo: if we have time we can have a list of user past games -->
+            <!-- <li>
+              <router-link :to="{ name: '', params: {} }">Your games</router-link>
+            </li> -->
             <li>
-              <a href="#" @click.prevent.default="logout">logout</a>
+              <a href="#" @click.prevent.default="logout">Logout</a>
             </li>
           </ul>
         </div>

@@ -1,7 +1,7 @@
 var Room = require('./models/Room.js')
 const axios = require('axios')
 
-module.exports = function(io) {
+module.exports = function (io, onlineUsers) {
   var RoomFunctions = {}
 
   RoomFunctions.add = (req, res) => {
@@ -14,16 +14,14 @@ module.exports = function(io) {
           time_per_questions: req.body.time_per_questions,
           api_data: response.data.results
         })
-        roomObj.save(function(err, room) {
-            if (err) return res.json(err)
-            if (room) {
-              res.json(room)
-            } else {
-              res.status(500).json({
-                error: 'Failed to create'
-              })
-            }
-          })
+        roomObj.save(function (err, room) {
+          if (err) return res.json(err)
+          if (room) {
+            res.json(room)
+          } else {
+            res.status(500).json({ error: 'Failed to create' })
+          }
+        })
           .populate('created_by')
           .populate('category')
       })
@@ -38,32 +36,71 @@ module.exports = function(io) {
     }, (err, room) => {
       if (err) return res.json(err)
       if (room) {
-
-        let duplicate = false;
-        if (room.participants.length > 0) {
+        let duplicate = false
+        let initialLength = room.participants.length
+        console.log(req.userId)
+        console.log(room.created_by)
+        if (room.participants.length > 0 && req.userId !== room.created_by.toString()) {
           for (var i = 0; i < room.participants.length; i++) {
             if (room.participants[i].id === req.userId) {
-              duplicate = true;
+              duplicate = true
             }
           }
         }
-        if (!duplicate && req.userId != room.created_by) {
+        if (!duplicate && req.userId !== room.created_by.toString()) {
           room.participants.push({
             id: req.userId
-          });
+          })
         }
 
-        //  savve stuff
-        room.save(function(err, roomSaved) {
-          if (err) return res.json({
-            error: err
-          })
+        //  save stuff
+        room.save(async function (err, roomSaved) {
+          if (err) return res.json({ error: err })
+          if (initialLength !== roomSaved.participants.length) {
+            Room.findOne({
+              code: req.params.code
+            }, (err, roomLatest) => {
+              if (err) return res.json(err)
+              let participants = []
+              participants.push(roomLatest.created_by._id)
+              if (roomLatest.participants.length > 0) {
+                for (var i = 0; i < roomLatest.participants.length; i++) {
+                  if (roomLatest.participants[i].id) {
+                    participants.push(roomLatest.participants[i].id._id)
+                  }
+                }
+              }
 
+              for (var m = 0; m < participants.length; m++) {
+                if (onlineUsers[participants[m]]) {
+                  for (var l = 0; l < onlineUsers[participants[m]].length; l++) {
+                    console.log('emit');
+                    io.to(`${onlineUsers[participants[m]][l]}`).emit('NEW_PARTICIPANT', roomLatest)
+                  }
+                }
+              }
+              // res.send(200)
+            })
+              .populate('created_by')
+              .populate('category')
+              .populate('participants.id')
+          }
           res.json(roomSaved)
         })
       }
-
     })
+  }
+
+  RoomFunctions.getOne = (req, res) => {
+    Room.findOne({
+      code: req.params.code
+    }, (err, room) => {
+      if (err) return res.json({ error: err })
+      res.status(200).json(room)
+    })
+      .populate('created_by')
+      .populate('category')
+      .populate('participants.id')
   }
 
   RoomFunctions.list = (req, res) => {

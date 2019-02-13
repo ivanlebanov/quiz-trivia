@@ -23,6 +23,26 @@ export default {
         //dispatch("user/logout", null, { root:true })
       })
   },
+  async getRoomData({
+    state,
+    commit,
+    dispatch
+  }, data) {
+    axios.get(`http://localhost:3000/room/${data}`)
+      .then(room => {
+        commit('SET_CURRENT_ROOM', room.data)
+      })
+      .catch(r => {
+        //dispatch("user/logout", null, { root:true })
+      })
+  },
+  async setRoomData({
+    state,
+    commit,
+    dispatch
+  }, data) {
+    commit('SET_CURRENT_ROOM', data)
+  },
   async joinGame({
     state,
     commit,
@@ -30,7 +50,6 @@ export default {
   }, data) {
     axios.put(`http://localhost:3000/room/${data.code}`)
       .then(room => {
-        alert();
         router.push({
           name: 'RoomLobby',
           params: {

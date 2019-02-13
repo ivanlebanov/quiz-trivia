@@ -40,6 +40,11 @@ var roomSchema = mongoose.Schema({
     type: String,
     required: true,
     default: shortid.generate
+  },
+  active: {
+    type: Boolean,
+    required: true,
+    default: 1
   }
 })
 

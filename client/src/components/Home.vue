@@ -27,16 +27,10 @@
     <div class="center-vertical" v-if="user && id && loggedIn">
       <div class="container ">
         <div class="row">
-          <div class="col-md-12">
-              <!-- <h1>Hi, {{ user.firstName }} {{ user.lastName }}!</h1> -->
-          </div>
-        </div>
-        <div class="row">
           <div class="col-md-5">
               <div class="card">
                   <h3>Create a game</h3>
                   <form @submit.prevent="createGame">
-                    <!-- <input type="text" v-model="form.category" placeholder="Category"> -->
                     <label>Category</label>
                     <v-select label="name" v-model="form.category" placeholder="Category" :options="categories"></v-select>
                     <label class="label">Number of questions</label>

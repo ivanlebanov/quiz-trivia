@@ -49,6 +49,7 @@ export default {
     axios.post('http://localhost:3000/auth/google', data)
       .then(dataObj => {
         axios.defaults.headers.common['x-access-token'] = dataObj.data.token;
+
         dispatch('setToken', dataObj.data.token);
         dispatch('setId', dataObj.data.id);
         dispatch('getCurrentUser', dataObj.data.id);
@@ -92,8 +93,8 @@ export default {
       axios.get('http://localhost:3000/user/' + state.id)
         .then(data => {
           if (data.data) {
-            if(state.token){
-              axios.defaults.headers.common['x-access-token'] = state.token
+            if(state.g_token){
+              axios.defaults.headers.common['x-access-token'] = state.g_token
             }
 
             commit('SET_USER', data.data)
