@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
 import RoomLobby from '@/components/RoomLobby'
+import RoomGame from '@/components/RoomGame'
 import store from '@/store'
 Vue.use(Router)
 
@@ -19,6 +20,11 @@ export default router = new Router({
       path: '/room/lobby/:code',
       name: 'RoomLobby',
       component: RoomLobby
+    },
+    {
+      path: '/room/lobby/:code/quiz',
+      name: 'RoomGame',
+      component: RoomGame
     }
   ]
 })

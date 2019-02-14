@@ -75,6 +75,19 @@ export default {
         alert('error');
         //dispatch("user/logout", null, { root:true })
       })
-  }
+  },
+  async startGame({
+    state,
+    commit,
+    dispatch
+  }, data) {
+    axios.put(`http://localhost:3000/room/${data.code}/start`)
+      .then(room => {
+        commit('SET_CURRENT_ROOM', data)
+      })
+      .catch(r => {
+        alert('error')
+      })
+  },
 
 };

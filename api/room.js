@@ -147,13 +147,12 @@ module.exports = function (io, onlineUsers) {
                     }
                   }
                   if (onlineUsers[req.params.id]) {
-                    for (var l = 0; l < onlineUsers[req.params.id].length; l++) {
-                      io.to(`${onlineUsers[req.params.id][l]}`).emit('UPDATED_ROOM', roomLatest)
-                      io.to(`${onlineUsers[req.params.id][l]}`).emit('DELETED_PARTICIPANT', roomLatest)
+                    for (var z = 0; z < onlineUsers[req.params.id].length; z++) {
+                      io.to(`${onlineUsers[req.params.id][z]}`).emit('UPDATED_ROOM', roomLatest)
+                      io.to(`${onlineUsers[req.params.id][z]}`).emit('DELETED_PARTICIPANT', roomLatest)
                     }
                   }
                 }
-                // res.send(200)
               })
                 .populate('created_by')
                 .populate('category')
@@ -164,6 +163,52 @@ module.exports = function (io, onlineUsers) {
         } else {
           res.json({ error: 'Game has already started.' })
         }
+      }
+    })
+  }
+
+  RoomFunctions.startGame = (req, res) => {
+    Room.findOne({
+      code: req.params.code,
+      created_by: req.userId
+    }, (err, room) => {
+      if (err) return res.json(err)
+
+      if (room && room.active) {
+        room.active = false
+        room.save(async function (err, roomSaved) {
+          if (err) return res.json({ error: err })
+          Room.findOne({
+            code: req.params.code
+          }, (err, roomLatest) => {
+            if (err) return res.json(err)
+            let participants = []
+            participants.push(roomLatest.created_by._id)
+            if (roomLatest.participants.length > 0) {
+              for (var i = 0; i < roomLatest.participants.length; i++) {
+                if (roomLatest.participants[i].id) {
+                  participants.push(roomLatest.participants[i].id._id)
+                }
+              }
+            }
+
+            for (var m = 0; m < participants.length; m++) {
+              if (onlineUsers[participants[m]]) {
+                for (var l = 0; l < onlineUsers[participants[m]].length; l++) {
+                  io.to(`${onlineUsers[participants[m]][l]}`).emit('GAME_STARTED', roomLatest)
+                }
+              }
+            }
+            // res.send(200)
+          })
+            .populate('created_by')
+            .populate('category')
+            .populate('participants.id')
+
+          res.json(roomSaved)
+        })
+      } else {
+        res.json({ error: 'Game has already started.' })
       }
     })
   }
