@@ -17,6 +17,7 @@
             <li v-for="participant in currentRoom.participants" v-if="currentRoom.participants.length > 0">
               <img :src="participant.id.avatar" alt="">
               <div> {{ participant.id.firstName }} {{ participant.id.lastName }}</div>
+              <button @click="kickUser(participant.id._id)" type="button" name="button" class="btn" v-if="currentRoom.created_by._id == id">kick out</button>
             </li>
           </ul>
           <button type="button" name="button" class="btn" v-if="currentRoom.created_by._id == id">start</button>
@@ -35,15 +36,15 @@ import {
 export default {
   name: 'RoomLobby',
   components: {},
-  created(){
-
-  },
   sockets:{
-    NEW_PARTICIPANT: function (data) {
-      console.log(data)
+    UPDATED_ROOM: function (data) {
       if(data.code == this.$route.params.code){
         this.$store.dispatch("room/setRoomData", data)
       }
+    },
+    DELETED_PARTICIPANT: function (data) {
+        this.$router.push({ name: 'Home' })
+        alert("Sorry. You've been kicked out.");
     }
   },
   mounted(){
@@ -68,8 +69,8 @@ export default {
     }
   },
   methods: {
-    getInfo(){
-
+    kickUser(id){
+      this.$store.dispatch("room/kickUser", { code: this.$route.params.code, id: id })
     }
 
   },
@@ -88,6 +89,10 @@ export default {
     width: 100%;
     margin: 0;
     padding: 0;
+    .btn{
+      float: right;
+      margin: -19px 0 0;
+    }
     li{
       margin-bottom: 10px;
       display: block;
