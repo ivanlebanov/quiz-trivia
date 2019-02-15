@@ -3,33 +3,33 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-          <div class="card">
-            <div class="card-body">
-              <h1>Questions: {{ $route.params.code }}</h1>
-            </div>
-          </div>
+          {{ currentRoom.time_per_questions }}
 
-          <div class="card" v-for="question in currentRoom.api_data">
-              <h2>{{ question.question }}</h2>
+          <div class="card" v-for="(question, index) in currentRoom.api_data" v-if="question_number == index">
+              <h2 v-html="(index + 1) + '. ' +question.question"></h2>
               <div class="row" v-if="question.type == 'boolean'">
                 <div class="col">
-                  <button type="button" name="button" class="btn">True</button>
+                  <button type="button" name="button" class="btn" @click="selectAnswer(index, 'True')">True</button>
                 </div>
                 <div class="col">
-                  <button type="button" name="button" class="btn">False</button>
+                  <button type="button" name="button" class="btn" @click="selectAnswer(index, 'False')">False</button>
                 </div>
               </div>
               <div class="row" v-else>
                 <div class="col-sm-6">
-                  <button type="button" name="button" class="btn">{{ question.correct_answer }}</button>
+                  <button type="button" name="button" class="btn" @click="selectAnswer(index, question.correct_answer)">{{ question.correct_answer }}</button>
                 </div>
                 <div class="col-sm-6" v-for="incorrect in splitJoin(question.incorrect_answers)">
-                  <button type="button" name="button" class="btn">{{ incorrect }}</button>
+                  <button type="button" name="button" class="btn" @click="selectAnswer(index, incorrect)">{{ incorrect }}</button>
                 </div>
               </div>
           </div>
 
-
+          <div class="card" v-if="question_number == currentRoom.api_data.length">
+            <div class="card-body">
+              <h2>Correct answers: {{ corrects }}</h2>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -47,6 +47,13 @@ export default {
       }
     }
   },
+  data(){
+    return{
+      question_number: 0,
+      corrects: 0,
+      timer: null
+    }
+  },
   mounted(){
     if(!this.currentRoom || this.currentRoom.code != this.$route.params.code){
       this.$store.dispatch("room/getRoomData", this.$route.params.code)
@@ -54,6 +61,52 @@ export default {
     this.proccessQuestions()
   },
   methods: {
+    proccessQuestions(){
+      let that = this
+
+      if(that.currentRoom){
+
+        let ms = that.currentRoom.time_per_questions * 1000
+        that.question_number = 0
+
+        that.timer = setInterval(function() {
+          if(that.currentRoom.api_data.length > that.question_number){
+            that.question_number++
+          }
+        }, ms)
+      }else{
+        setTimeout(function() {
+          that.proccessQuestions()
+        }, 100);
+      }
+
+    },
+    selectAnswer(index, answer){
+      let that = this
+      if(this.currentRoom.api_data[index].correct_answer === answer){
+        this.$notify({
+          group: "foo",
+          text: `Correct answer.`,
+          type: "success"
+        })
+        this.corrects++
+      }else{
+        this.$notify({
+          group: "foo",
+          text: `Wrong answer. Correct answer was ${this.currentRoom.api_data[index].correct_answer}`,
+          type: "error"
+        })
+      }
+      this.question_number++
+
+      clearInterval(this.timer);
+      let ms = that.currentRoom.time_per_questions * 1000
+      this.timer = setInterval(function() {
+        if(that.currentRoom.api_data.length > that.question_number){
+          that.question_number++
+        }
+      }, ms);
+    },
     splitJoin(theText){
       return theText.split(',');
     },
