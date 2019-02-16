@@ -55,7 +55,7 @@ export default {
         })
     }
   },
-  mounted(){
+  created(){
     this.$store.dispatch("room/getRoomData", this.$route.params.code)
   },
   methods: {

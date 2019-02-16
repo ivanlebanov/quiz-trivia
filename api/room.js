@@ -244,7 +244,6 @@ module.exports = function (io, onlineUsers) {
 
       if (room && !room.active) {
         for (var m = 0; m < room.participants.length; m++) {
-          console.log('TEST1111111');
           if (room.participants[m].id._id == req.userId && !room.participants[m].finished && req.body.question >= room.participants[m].question) {
             //
             room.participants[m].points = room.participants[m].points + req.body.points

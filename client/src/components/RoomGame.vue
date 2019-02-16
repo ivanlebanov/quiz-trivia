@@ -3,9 +3,9 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-          {{ currentRoom.time_per_questions }}
-          {{ time }}
-
+          <div class="time">
+            <h1 v-if="currentRoom.time_per_questions - time > 0 && question_number < currentRoom.api_data.length" style="text-align:right;margin-right:15px;color:#fff">{{ currentRoom.time_per_questions - time }}</h1>
+          </div>
 
           <div class="card" v-for="(question, index) in currentRoom.api_data" v-if="question_number == index">
               <h2 v-html="(index + 1) + '. ' +question.question"></h2>
@@ -146,7 +146,6 @@ export default {
       }else{
         this.corrects++
       }
-      alert(points);
       this.$store.dispatch("room/addPoints", { code: this.$route.params.code, points: points, corrects: this.corrects, question: this.question_number })
 
     },

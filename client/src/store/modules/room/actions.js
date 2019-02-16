@@ -30,6 +30,7 @@ export default {
   }, data) {
     axios.get(`http://localhost:3000/room/${data}`)
       .then(room => {
+        console.log(room.data);
         commit('SET_CURRENT_ROOM', room.data)
       })
       .catch(r => {
@@ -106,7 +107,7 @@ export default {
   }, data) {
     axios.put(`http://localhost:3000/room/${data.code}/start`)
       .then(room => {
-        commit('SET_CURRENT_ROOM', data)
+        //commit('SET_CURRENT_ROOM', data)
       })
       .catch(r => {
         alert('error')
