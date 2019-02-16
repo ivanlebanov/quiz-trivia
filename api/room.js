@@ -1,4 +1,5 @@
 var Room = require('./models/Room.js')
+var User = require('./models/User.js')
 const axios = require('axios')
 
 module.exports = function (io, onlineUsers) {
@@ -129,6 +130,16 @@ module.exports = function (io, onlineUsers) {
       .populate('created_by')
       .populate('category')
       .populate('participants.id')
+  }
+
+  RoomFunctions.getRanking = (req, res) => {
+    User.find({}, (err, users) => {
+      if (err) {
+        return res.status(500).json(err)
+      }
+      return res.status(200).json(users)
+    })
+      .sort({ points: -1 })
   }
 
   RoomFunctions.list = (req, res) => {
@@ -294,11 +305,25 @@ module.exports = function (io, onlineUsers) {
       if (err) return res.json(err)
 
       if (room && !room.active) {
+
         for (var m = 0; m < room.participants.length; m++) {
           if (room.participants[m].id._id == req.userId) {
             room.participants[m].finished = true
+            let points = room.participants[m].points
+            User.findOne({
+              _id: req.userId
+            }, (err, user) => {
+              if (err) return res.json(err)
+              console.log(points)
+              console.log('-------')
+              user.points = user.points + points
+              user.save(async function (err, userSaved) {
+                if (err) return res.json(err)
+              })
+            })
           }
         }
+
         room.save(async function (err, roomSaved) {
           if (err) return res.json({ error: err })
           Room.findOne({

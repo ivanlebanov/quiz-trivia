@@ -72,19 +72,28 @@ export default {
         //dispatch("user/logout", null, { root:true })
       })
   },
-  addPoints({
+  async addPoints({
     state,
     commit,
     dispatch
   }, data) {
     axios.put(`http://localhost:3000/room/${data.code}/points`, data)
   },
-  finishGame({
+  async finishGame({
     state,
     commit,
     dispatch
   }, data) {
     axios.put(`http://localhost:3000/room/${data.code}/finish`, data)
+  },
+  async ranking({
+    state,
+    commit,
+    dispatch
+  }, data) {
+    axios.get(`http://localhost:3000/ranking`).then(room => {
+      commit('SET_RANKING', room.data)
+    })
   },
   async kickUser({
     state,
@@ -97,7 +106,6 @@ export default {
       })
       .catch(r => {
         alert('error');
-        //dispatch("user/logout", null, { root:true })
       })
   },
   async startGame({
@@ -107,7 +115,7 @@ export default {
   }, data) {
     axios.put(`http://localhost:3000/room/${data.code}/start`)
       .then(room => {
-        //commit('SET_CURRENT_ROOM', data)
+
       })
       .catch(r => {
         alert('error')

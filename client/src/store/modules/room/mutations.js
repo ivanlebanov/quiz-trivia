@@ -6,5 +6,8 @@ export default {
   },
   SET_CURRENT_ROOM(state, data) {
     state.currentRoom = data;
+  },
+  SET_RANKING(state, data) {
+    state.ranking = data;
   }
 };

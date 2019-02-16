@@ -2,10 +2,23 @@
   <div class="hello gameRoom" v-if="currentRoom">
     <div class="container">
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
+          <div class="time">
+            <h1 v-if="currentRoom.time_per_questions - time > 0 && question_number < currentRoom.api_data.length" style="margin-right:15px;color:#fff">
+
+
+              <template v-for="participant in currentRoom.participants" v-if="currentRoom.participants.length > 0 && id == participant.id._id">
+                Score: {{ participant.points }}
+              </template>
+            </h1>
+          </div>
+        </div>
+        <div class="col-md-6">
           <div class="time">
             <h1 v-if="currentRoom.time_per_questions - time > 0 && question_number < currentRoom.api_data.length" style="text-align:right;margin-right:15px;color:#fff">{{ currentRoom.time_per_questions - time }}</h1>
           </div>
+        </div>
+        <div class="col-md-12">
 
           <div class="card" v-for="(question, index) in currentRoom.api_data" v-if="question_number == index">
               <h2 v-html="(index + 1) + '. ' +question.question"></h2>
@@ -26,17 +39,20 @@
 
           <div class="card" v-if="question_number == currentRoom.api_data.length">
             <div class="card-body">
-              <h2>Correct answers: {{ corrects }}</h2>
+              <h1>Results:</h1>
               <ul class="user-list">
-                <li v-for="participant in currentRoom.participants" v-if="currentRoom.participants.length > 0">
+                <li v-for="(participant, index) in even(currentRoom.participants)" v-if="currentRoom.participants.length > 0">
+
                   <img :src="participant.id.avatar" alt="">
                   <div>
+                    {{ index + 1 }}.
                     {{ participant.id.firstName }} {{ participant.id.lastName }}
                     <span v-if="participant.finished">
                       (finished)
                     </span>
                   </div>
                   {{ participant.points }} points
+                  {{ participant.corrects }} correct answers
                 </li>
               </ul>
             </div>
@@ -74,21 +90,42 @@ export default {
     this.proccessQuestions()
   },
   methods: {
+    even(arr) {
+      // Set slice() to avoid to generate an infinite loop!
+      return arr.slice().sort(function(a, b) {
+        return  b.points - a.points;
+      });
+    },
+    finishedGame(id){
+      for (var i = 0; i < this.currentRoom.participants.length; i++) {
+        if(this.currentRoom.participants[i].id._id == id && this.currentRoom.participants[i].finished){
+          return true
+        }
+      }
+
+      return false
+    },
     proccessQuestions(){
       let that = this
 
       if(that.currentRoom && that.currentRoom.api_data){
-        let ms = that.currentRoom.time_per_questions * 1000
-        that.question_number = 0
-        that.toggleTimer()
+        let isfinishedGame = this.finishedGame(this.id)
+        if(isfinishedGame){
+          that.question_number = that.currentRoom.api_data.length
+        }else{
+          let ms = that.currentRoom.time_per_questions * 1000
+          that.question_number = 0
+          that.toggleTimer()
 
-        that.timer = setInterval(function() {
-          if(that.currentRoom.api_data.length > that.question_number){
-            that.question_number++
-            that.time = 0
+          that.timer = setInterval(function() {
+            if(that.currentRoom.api_data.length > that.question_number){
+              that.question_number++
+              that.time = 0
 
-          }
-        }, ms)
+            }
+          }, ms)
+        }
+
       }else{
         setTimeout(function() {
           that.proccessQuestions()
@@ -186,6 +223,9 @@ export default {
         float: left;
         margin: 0 0 15px;
       }
+    }
+    .user-list li div{
+      padding-top: 5px;
     }
   }
   .user-list{

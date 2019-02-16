@@ -4,7 +4,8 @@ import mutations from "./mutations";
 
 const state = {
   rooms: [],
-  currentRoom: null
+  currentRoom: null,
+  ranking: []
 };
 
 export default {

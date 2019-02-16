@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '@/components/Home'
 import RoomLobby from '@/components/RoomLobby'
 import RoomGame from '@/components/RoomGame'
+import Ranking from '@/components/Ranking'
 import store from '@/store'
 Vue.use(Router)
 
@@ -15,6 +16,11 @@ export default router = new Router({
       path: '/',
       name: 'Home',
       component: Home
+    },
+    {
+      path: '/ranking',
+      name: 'Ranking',
+      component: Ranking
     },
     {
       path: '/room/lobby/:code',

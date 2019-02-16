@@ -7,4 +7,7 @@ export default {
   currentRoom: (state, id) => {
     return state.currentRoom;
   },
+  ranking: (state, id) => {
+    return state.ranking;
+  },
 };
