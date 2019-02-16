@@ -4,6 +4,8 @@
       <div class="row">
         <div class="col-md-12">
           {{ currentRoom.time_per_questions }}
+          {{ time }}
+
 
           <div class="card" v-for="(question, index) in currentRoom.api_data" v-if="question_number == index">
               <h2 v-html="(index + 1) + '. ' +question.question"></h2>
@@ -16,11 +18,8 @@
                 </div>
               </div>
               <div class="row" v-else>
-                <div class="col-sm-6">
-                  <button type="button" name="button" class="btn" @click="selectAnswer(index, question.correct_answer)">{{ question.correct_answer }}</button>
-                </div>
                 <div class="col-sm-6" v-for="incorrect in splitJoin(question.incorrect_answers)">
-                  <button type="button" name="button" class="btn" @click="selectAnswer(index, incorrect)">{{ incorrect }}</button>
+                  <button type="button" name="button" class="btn" @click="selectAnswer(index, incorrect)" v-html="incorrect"></button>
                 </div>
               </div>
           </div>
@@ -28,6 +27,18 @@
           <div class="card" v-if="question_number == currentRoom.api_data.length">
             <div class="card-body">
               <h2>Correct answers: {{ corrects }}</h2>
+              <ul class="user-list">
+                <li v-for="participant in currentRoom.participants" v-if="currentRoom.participants.length > 0">
+                  <img :src="participant.id.avatar" alt="">
+                  <div>
+                    {{ participant.id.firstName }} {{ participant.id.lastName }} 
+                    <span v-if="participant.finished">
+                      (finished)
+                    </span>
+                  </div>
+                  {{ participant.points }} points
+                </li>
+              </ul>
             </div>
           </div>
         </div>
@@ -42,6 +53,7 @@ export default {
   name: 'RoomGame',
   sockets:{
     UPDATED_ROOM: function (data) {
+      console.log(data);
       if(data.code == this.$route.params.code){
         this.$store.dispatch("room/setRoomData", data)
       }
@@ -51,27 +63,29 @@ export default {
     return{
       question_number: 0,
       corrects: 0,
-      timer: null
+      timer: null,
+      time: 0,
+      isRunning: false,
+      interval: null
     }
   },
   mounted(){
-    if(!this.currentRoom || this.currentRoom.code != this.$route.params.code){
-      this.$store.dispatch("room/getRoomData", this.$route.params.code)
-    }
+    this.$store.dispatch("room/getRoomData", this.$route.params.code)
     this.proccessQuestions()
   },
   methods: {
     proccessQuestions(){
       let that = this
 
-      if(that.currentRoom){
-
+      if(that.currentRoom && that.currentRoom.api_data){
         let ms = that.currentRoom.time_per_questions * 1000
         that.question_number = 0
+        that.toggleTimer()
 
         that.timer = setInterval(function() {
           if(that.currentRoom.api_data.length > that.question_number){
             that.question_number++
+            that.time = 0
           }
         }, ms)
       }else{
@@ -81,15 +95,28 @@ export default {
       }
 
     },
+
+    toggleTimer() {
+      if (this.isRunning) {
+        clearInterval(this.interval);
+        console.log('timer stops');
+      } else {
+        this.interval = setInterval(this.incrementTime, 1000);
+      }
+      this.isRunning = !this.isRunning
+    },
+    incrementTime() {
+      this.time = parseInt(this.time) + 1;
+    },
+
     selectAnswer(index, answer){
-      let that = this
       if(this.currentRoom.api_data[index].correct_answer === answer){
         this.$notify({
           group: "foo",
           text: `Correct answer.`,
           type: "success"
         })
-        this.corrects++
+        this.addPoints(index)
       }else{
         this.$notify({
           group: "foo",
@@ -98,12 +125,33 @@ export default {
         })
       }
       this.question_number++
+      if(this.question_number == this.currentRoom.api_data.length){
+        this.$store.dispatch("room/finishGame", { code: this.$route.params.code })
+      }
+      this.restartQuestionTimer()
+    },
+    addPoints(index){
+      this.corrects++
+      let points = 100
+      let percentage = this.time / this.currentRoom.time_per_questions
+      if(percentage < 0.33){
+        points = points + 100
+      }else if (percentage > 0.33 &&  percentage < 0.66) {
+        points = points + 50
+      }
 
-      clearInterval(this.timer);
+      this.$store.dispatch("room/addPoints", { code: this.$route.params.code, points: points })
+
+    },
+    restartQuestionTimer(){
+      let that = this
+
+      clearInterval(this.timer)
       let ms = that.currentRoom.time_per_questions * 1000
       this.timer = setInterval(function() {
         if(that.currentRoom.api_data.length > that.question_number){
           that.question_number++
+          that.toggleTimer()
         }
       }, ms);
     },

@@ -10,7 +10,7 @@ module.exports = function (io) {
       email: req.body.email
     }, (err, user) => {
       if (err) return res.json(err)
-      let userObj
+      let userObj = null
       if (user) {
         user.set({
           token: req.body.token,

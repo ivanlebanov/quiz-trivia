@@ -15,7 +15,7 @@
                   </div>
                 </li>
 
-                <li v-for="participant in currentRoom.participants" v-if="currentRoom.participants.length > 0">
+                <li v-for="participant in currentRoom.participants" v-if="currentRoom.participants.length > 0 && currentRoom.created_by._id != participant.id._id">
                   <img :src="participant.id.avatar" alt="">
                   <div> {{ participant.id.firstName }} {{ participant.id.lastName }}</div>
                   <button @click="kickUser(participant.id._id)" type="button" name="button" class="btn" v-if="currentRoom.created_by._id == id">kick out</button>

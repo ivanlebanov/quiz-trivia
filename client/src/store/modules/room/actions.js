@@ -50,17 +50,40 @@ export default {
   }, data) {
     axios.put(`http://localhost:3000/room/${data.code}`)
       .then(room => {
-        router.push({
-          name: 'RoomLobby',
-          params: {
-            code: room.data.code
-          }
-        })
+        if(room.data.error){
+          Vue.notify({
+            group: "foo",
+            text: `Game has already started.`,
+            type: "error"
+          });
+        }else{
+          router.push({
+            name: 'RoomLobby',
+            params: {
+              code: room.data.code
+            }
+          })
+        }
+
       })
       .catch(r => {
         alert('error');
         //dispatch("user/logout", null, { root:true })
       })
+  },
+  addPoints({
+    state,
+    commit,
+    dispatch
+  }, data) {
+    axios.put(`http://localhost:3000/room/${data.code}/points`, data)
+  },
+  finishGame({
+    state,
+    commit,
+    dispatch
+  }, data) {
+    axios.put(`http://localhost:3000/room/${data.code}/finish`, data)
   },
   async kickUser({
     state,
