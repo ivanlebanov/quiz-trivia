@@ -41,6 +41,14 @@ var roomSchema = mongoose.Schema({
       finished: {
         type: Boolean,
         default: 0
+      },
+      question: {
+        type: Number,
+        default: 0
+      },
+      corrects: {
+        type: Number,
+        default: 0
       }
     }
   ],

@@ -31,7 +31,7 @@
                 <li v-for="participant in currentRoom.participants" v-if="currentRoom.participants.length > 0">
                   <img :src="participant.id.avatar" alt="">
                   <div>
-                    {{ participant.id.firstName }} {{ participant.id.lastName }} 
+                    {{ participant.id.firstName }} {{ participant.id.lastName }}
                     <span v-if="participant.finished">
                       (finished)
                     </span>
@@ -86,6 +86,7 @@ export default {
           if(that.currentRoom.api_data.length > that.question_number){
             that.question_number++
             that.time = 0
+
           }
         }, ms)
       }else{
@@ -116,13 +117,14 @@ export default {
           text: `Correct answer.`,
           type: "success"
         })
-        this.addPoints(index)
+        this.addPoints(index, answer)
       }else{
         this.$notify({
           group: "foo",
           text: `Wrong answer. Correct answer was ${this.currentRoom.api_data[index].correct_answer}`,
           type: "error"
         })
+        this.addPoints(index, false)
       }
       this.question_number++
       if(this.question_number == this.currentRoom.api_data.length){
@@ -130,8 +132,7 @@ export default {
       }
       this.restartQuestionTimer()
     },
-    addPoints(index){
-      this.corrects++
+    addPoints(index, correct){
       let points = 100
       let percentage = this.time / this.currentRoom.time_per_questions
       if(percentage < 0.33){
@@ -139,19 +140,25 @@ export default {
       }else if (percentage > 0.33 &&  percentage < 0.66) {
         points = points + 50
       }
+      if(!correct){
 
-      this.$store.dispatch("room/addPoints", { code: this.$route.params.code, points: points })
+        points = 0
+      }else{
+        this.corrects++
+      }
+      alert(points);
+      this.$store.dispatch("room/addPoints", { code: this.$route.params.code, points: points, corrects: this.corrects, question: this.question_number })
 
     },
     restartQuestionTimer(){
       let that = this
-
       clearInterval(this.timer)
       let ms = that.currentRoom.time_per_questions * 1000
+      that.time = 0
       this.timer = setInterval(function() {
         if(that.currentRoom.api_data.length > that.question_number){
           that.question_number++
-          that.toggleTimer()
+          that.time = 0
         }
       }, ms);
     },

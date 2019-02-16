@@ -244,8 +244,14 @@ module.exports = function (io, onlineUsers) {
 
       if (room && !room.active) {
         for (var m = 0; m < room.participants.length; m++) {
-          if (room.participants[m].id._id == req.userId && !room.participants[m].finished) {
+          console.log('TEST1111111');
+          if (room.participants[m].id._id == req.userId && !room.participants[m].finished && req.body.question >= room.participants[m].question) {
+            //
             room.participants[m].points = room.participants[m].points + req.body.points
+            room.participants[m].question = req.body.question
+            if (req.body.points !== 0) {
+              room.participants[m].corrects = room.participants[m].corrects + 1
+            }
           }
         }
         room.save(async function (err, roomSaved) {
