@@ -108,6 +108,19 @@ export default {
         alert('error');
       })
   },
+  async message({
+    state,
+    commit,
+    dispatch
+  }, data) {
+    axios.put(`http://localhost:3000/room/${data.code}/message`, data)
+      .then(room => {
+        // commit('SET_CURRENT_ROOM', data)
+      })
+      .catch(r => {
+        alert('error');
+      })
+  },
   async startGame({
     state,
     commit,

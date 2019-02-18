@@ -76,7 +76,6 @@ html {
 *, *:before, *:after {
   box-sizing: inherit;
 }
-
 body .btn-rounded{
   border-radius: 50%;
   width: 30px;
@@ -252,5 +251,30 @@ section{
   float: left;
   width: 100%;
 }
-
+.card-overflown{
+  position: relative;
+  padding-bottom: 70px;
+  .card-body{
+    overflow-y: auto;
+    height: 300px;
+    position: relative;
+  }
+  form{
+    position: absolute;
+    left: 1em;
+    right: 1em;
+    bottom: 0;
+  }
+  input{
+    width: calc(100% - 72px);
+    margin-top: 0;
+  }
+  .message{
+    margin-bottom: 5px;
+  }
+  .btn{
+    min-height: 52px;
+    width: auto!important;
+  }
+}
 </style>

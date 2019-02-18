@@ -3,7 +3,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-5">
-          <router-link :to="{ name: 'Home'}" class="logo" tag="h1">
+          <router-link :to="{ name: 'Home' }" class="logo" tag="h1">
             Trivia quiz
           </router-link>
         </div>
@@ -11,10 +11,6 @@
           <!--  navigation elements -->
           <ul>
             <li>{{ user.firstName }} {{ user.lastName }}</li>
-            <!-- todo: if we have time we can have a list of user past games -->
-            <!-- <li>
-              <router-link :to="{ name: '', params: {} }">Your games</router-link>
-            </li> -->
             <li>
               <router-link :to="{ name: 'Ranking' }">Ranking</router-link>
             </li>
@@ -29,83 +25,83 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
+import { mapGetters } from 'vuex'
 import axios from 'axios'
 export default {
-  data(){
-      return {
-        isActiveMenu: false,
-        isActiveInviteMenu: false,
-        term: '',
-        suggestions: [],
-        delay: 500
-      }
+  data() {
+    return {
+      isActiveMenu: false,
+      isActiveInviteMenu: false,
+      term: '',
+      suggestions: [],
+      delay: 500
+    }
   },
   methods: {
-    logout (){
-      this.$store.dispatch("user/logout");
-      this.$socket.emit('disconnect');
+    logout() {
+      this.$store.dispatch('user/logout')
+      this.$socket.emit('disconnect')
       setTimeout(function() {
-        location.reload();
+        location.reload()
       }, 1000)
     }
   },
   computed: {
-    ...mapGetters("user", ["user", "id"]),
+    ...mapGetters('user', ['user', 'id'])
   }
 }
 </script>
 
 <style lang="scss">
-  .navigation{
+.navigation {
+  float: left;
+  width: 100%;
+  background: #fff;
+  box-shadow: 0 1px 20px 0 rgba(46, 61, 73, 0.2);
+  padding: 0.8em;
+  .logo {
+    cursor: pointer;
+  }
+  li {
     float: left;
+    display: block;
+    margin-left: 15px;
+    position: relative;
+  }
+  a {
+    float: left;
+    display: block;
     width: 100%;
-    background: #fff;
-    box-shadow: 0 1px 20px 0 rgba(46,61,73,.2);
-    padding: .8em;
-    .logo{
-      cursor: pointer;
-    }
-    li{
-      float: left;
-      display: block;
-      margin-left: 15px;
+  }
+  .avatar {
+    float: left;
+    display: block;
+    max-height: 35px;
+    margin-right: 10px;
+    border-radius: 50%;
+    margin-top: 0;
+  }
+  h1 {
+    float: left;
+    margin: 0;
+    padding: 0;
+  }
+  ul {
+    float: right;
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+    li {
       position: relative;
-    }
-    a{
-      float: left;
-      display: block;
-      width: 100%;
-    }
-    .avatar{
-      float: left;
-      display: block;
-      max-height: 35px;
-      margin-right: 10px;
-      border-radius: 50%;
-      margin-top: 0;
-    }
-    h1{
-      float: left;
-      margin: 0;
-      padding: 0;
-    }
-    ul{
-      float: right;
-      margin: 10px 0 0;
-      padding: 0;
-      list-style: none;
-      li{
-        position: relative;
-        svg{
-          margin-top: 5px;
-        }
-        span.name{
-          margin-top: 10px;
-          display: block;
-          float: left;
-        }
+      svg {
+        margin-top: 5px;
+      }
+      span.name {
+        margin-top: 10px;
+        display: block;
+        float: left;
       }
     }
   }
+}
 </style>

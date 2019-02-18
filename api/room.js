@@ -110,6 +110,7 @@ module.exports = function (io, onlineUsers) {
                 .populate('created_by')
                 .populate('category')
                 .populate('participants.id')
+                .populate('messages.id')
             }
             res.json(roomSaved)
           })
@@ -130,6 +131,7 @@ module.exports = function (io, onlineUsers) {
       .populate('created_by')
       .populate('category')
       .populate('participants.id')
+      .populate('messages.id')
   }
 
   RoomFunctions.getRanking = (req, res) => {
@@ -193,6 +195,7 @@ module.exports = function (io, onlineUsers) {
                 .populate('created_by')
                 .populate('category')
                 .populate('participants.id')
+                .populate('messages.id')
             }
             res.json(roomSaved)
           })
@@ -238,6 +241,7 @@ module.exports = function (io, onlineUsers) {
             .populate('created_by')
             .populate('category')
             .populate('participants.id')
+            .populate('messages.id')
 
           res.json(roomSaved)
         })
@@ -246,7 +250,56 @@ module.exports = function (io, onlineUsers) {
       }
     })
   }
+  RoomFunctions.message = (req, res) => {
+    Room.findOne({
+      code: req.params.code,
+      participants: {
+        $elemMatch: {
+          id: req.userId
+        }
+      }
+    }, (err, room) => {
+      if (err) return res.json(err)
 
+      if (room) {
+        room.messages.push({
+          id: req.userId,
+          message: req.body.message
+        })
+        room.save(async function (err, roomSaved) {
+          if (err) return res.json({ error: err })
+          Room.findOne({
+            code: req.params.code
+          }, (err, roomLatest) => {
+            if (err) return res.json(err)
+            let participants = []
+
+            for (var i = 0; i < roomLatest.participants.length; i++) {
+              if (roomLatest.participants[i].id) {
+                participants.push(roomLatest.participants[i].id._id)
+              }
+            }
+
+            for (var m = 0; m < participants.length; m++) {
+              if (onlineUsers[participants[m]]) {
+                for (var l = 0; l < onlineUsers[participants[m]].length; l++) {
+                  io.to(`${onlineUsers[participants[m]][l]}`).emit('UPDATED_ROOM', roomLatest)
+                  io.to(`${onlineUsers[participants[m]][l]}`).emit('newMessage', roomLatest)
+                }
+              }
+            }
+          })
+            .populate('created_by')
+            .populate('category')
+            .populate('participants.id')
+            .populate('messages.id')
+          res.json(roomSaved)
+        })
+      } else {
+        res.json({ error: 'There was an error.' })
+      }
+    })
+  }
   RoomFunctions.addPoints = (req, res) => {
     Room.findOne({
       code: req.params.code
@@ -290,6 +343,7 @@ module.exports = function (io, onlineUsers) {
             .populate('created_by')
             .populate('category')
             .populate('participants.id')
+            .populate('messages.id')
 
           res.json(roomSaved)
         })
@@ -350,6 +404,7 @@ module.exports = function (io, onlineUsers) {
             .populate('created_by')
             .populate('category')
             .populate('participants.id')
+            .populate('messages.id')
 
           res.json(roomSaved)
         })

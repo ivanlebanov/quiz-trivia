@@ -1,17 +1,5 @@
 <template>
   <div class="hello">
-    <!-- <h1>Hi</h1>
-    <ul>
-      <li v-for="person in people">
-        {{ person.name }}
-      </li>
-    </ul>
-    <form @submit.prevent="add">
-      My username is {{ form.username }} pass: {{ form.password }}
-      <input type="text" v-model="form.username">
-      <input type="text" v-model="form.password">
-      <button type="submit" name="button">add</button>
-    </form> -->
     <div class="center-vertical" v-if="!loggedIn">
       <div class="container ">
         <div class="col-md-5">
@@ -28,59 +16,79 @@
       <div class="container ">
         <div class="row">
           <div class="col-md-5">
-              <div class="card">
-                  <h3>Create a game</h3>
-                  <form @submit.prevent="createGame">
-                    <label>Category</label>
-                    <v-select label="name" v-model="form.category" placeholder="Category" :options="categories"></v-select>
-                    <label class="label">Number of questions</label>
-                    <input type="number" v-model="form.questions" max="30" min="1" placeholder="Number of questions">
-                    <label class="label">Time per question(in seconds)</label>
-                    <input type="number" v-model="form.time_per_questions" min="10" max="120" placeholder="Time per question(in seconds)">
-                    <button type="submit" name="button" class="btn">create game</button>
-                  </form>
-              </div>
+            <div class="card">
+              <h3>Create a game</h3>
+              <form @submit.prevent="createGame">
+                <label>Category</label>
+                <v-select
+                  label="name"
+                  v-model="form.category"
+                  placeholder="Category"
+                  :options="categories"
+                ></v-select>
+                <label class="label">Number of questions</label>
+                <input
+                  type="number"
+                  v-model="form.questions"
+                  max="30"
+                  min="1"
+                  placeholder="Number of questions"
+                />
+                <label class="label">Time per question(in seconds)</label>
+                <input
+                  type="number"
+                  v-model="form.time_per_questions"
+                  min="10"
+                  max="120"
+                  placeholder="Time per question(in seconds)"
+                />
+                <button type="submit" name="button" class="btn">
+                  create game
+                </button>
+              </form>
             </div>
-            <div class="col-md-2"></div>
-            <div class="col-md-5">
-                <div class="card">
-                    <h3>Join a game</h3>
-                    <form @submit.prevent="joinGame">
-                      <label>Room Number</label>
-                      <input type="text" v-model="join" max="30" min="1" placeholder="Room Number">
-                      <button type="submit" name="button" class="btn">join</button>
-                    </form>
-                </div>
-              </div>
+          </div>
+          <div class="col-md-2"></div>
+          <div class="col-md-5">
+            <div class="card">
+              <h3>Join a game</h3>
+              <form @submit.prevent="joinGame">
+                <label>Room Number</label>
+                <input
+                  type="text"
+                  v-model="join"
+                  max="30"
+                  min="1"
+                  placeholder="Room Number"
+                />
+                <button type="submit" name="button" class="btn">join</button>
+              </form>
             </div>
+          </div>
         </div>
       </div>
-
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import {
-  mapGetters
-} from "vuex";
+import { mapGetters } from 'vuex'
 export default {
   name: 'Home',
   components: {},
   watch: {
-  'categories': function(newVal, oldVal) {
-    if(newVal != null){
-      this.form.category = this.categories[0]
+    categories: function(newVal, oldVal) {
+      if (newVal != null) {
+        this.form.category = this.categories[0]
+      }
     }
-  }
-},
-  created(){
-
   },
-  mounted(){
-    this.getInfo();
+  created() {},
+  mounted() {
+    this.getInfo()
   },
-  data(){
+  data() {
     return {
       form: {
         category: null,
@@ -89,7 +97,7 @@ export default {
         time_per_questions: 30
       },
       join: '',
-      people:[
+      people: [
         {
           name: 'a name'
         },
@@ -99,26 +107,25 @@ export default {
       ],
       loggedIn: false
     }
-
   },
   methods: {
-    getInfo(){
-      if(!gapi && !loaded){
-        let that = this;
+    getInfo() {
+      if (!gapi && !loaded) {
+        let that = this
         setTimeout(function() {
-          that.getInfo();
+          that.getInfo()
         }, 1000)
-      }else{
-        this.loaded = true;
-        gapi.signin2.render('google-signin-btn', { // this is the button "id"
+      } else {
+        this.loaded = true
+        gapi.signin2.render('google-signin-btn', {
           onsuccess: this.onSignIn // note, no "()" here
         })
       }
     },
     onSignIn(googleUser) {
-      var profile = googleUser.getBasicProfile();
+      var profile = googleUser.getBasicProfile()
 
-      var id_token = googleUser.getAuthResponse().id_token;
+      var id_token = googleUser.getAuthResponse().id_token
 
       let profile_obj = {
         givenName: profile.getGivenName(),
@@ -126,49 +133,48 @@ export default {
         avatar: profile.getImageUrl(),
         email: profile.getEmail(),
         token: id_token
-      };
-      if((!this.id && !this.user ) || !this.user.just_deleted){
-        this.$store.dispatch("user/login", profile_obj);
+      }
+      if ((!this.id && !this.user) || !this.user.just_deleted) {
+        this.$store.dispatch('user/login', profile_obj)
         this.loggedIn = true
       }
-
     },
-    createGame(){
-      this.$store.dispatch("room/createGame", this.form);
+    createGame() {
+      this.$store.dispatch('room/createGame', this.form)
     },
-    joinGame(){
-      this.$store.dispatch("room/joinGame", {code: this.join});
+    joinGame() {
+      this.$store.dispatch('room/joinGame', { code: this.join })
     },
-    create () {
+    create() {
       //this.$store.dispatch("user/addUser", this.form);
     }
   },
   computed: {
-    ...mapGetters("user", ["user", "id"]),
-    ...mapGetters("category", ["categories"]),
+    ...mapGetters('user', ['user', 'id']),
+    ...mapGetters('category', ['categories'])
   }
 }
 </script>
 
 <style lang="scss">
-  .hello{
-    float: left;
-    width: 100%;
+.hello {
+  float: left;
+  width: 100%;
+}
+.label {
+  float: left;
+  display: block;
+  width: 100%;
+  clear: both;
+}
+body .v-select {
+  margin-top: 5px;
+  background: #fff;
+  border: 2px solid #000;
+  padding: 10px 10px;
+  margin-bottom: 15px;
+  .dropdown-toggle {
+    border: none;
   }
-  .label{
-    float: left;
-    display: block;
-    width: 100%;
-    clear: both;
-  }
-  body .v-select{
-    margin-top: 5px;
-    background: #fff;
-    border: 2px solid #000;
-    padding: 10px 10px;
-    margin-bottom: 15px;
-   .dropdown-toggle{
-     border: none;
-   }
-  }
+}
 </style>
