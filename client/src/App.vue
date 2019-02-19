@@ -305,4 +305,13 @@ section{
     width: auto!important;
   }
 }
+
+@media screen and (max-width: 700px) {
+  body .center-vertical{
+    position: relative;
+    top: 0;
+    transform: none;
+
+  }
+}
 </style>
