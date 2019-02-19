@@ -76,12 +76,12 @@ app.put('/room/:code/user/:id', VerifyToken, room.kicKUser)
 app.get('/room/:code', VerifyToken, room.getOne)
 app.get('/api/ranking', room.getRanking)
 app.get('/room/lobby/:id', (req, res) => {
-  express.static(path.join(__dirname, '..', 'client', 'dist'))
+  res.sendfile(path.join(__dirname, '..', 'client', 'dist'))
 })
 app.get('/room/lobby/:id/lobby', (req, res) => {
-  express.static(path.join(__dirname, '..', 'client', 'dist'))
+  res.sendfile(path.join(__dirname, '..', 'client', 'dist'))
 })
 app.get('/ranking', (req, res) => {
-  express.static(path.join(__dirname, '..', 'client', 'dist'))
+  res.sendfile(path.join(__dirname, '..', 'client', 'dist'))
 })
 app.use(express.static(path.join(__dirname, '..', 'client', 'dist')))
