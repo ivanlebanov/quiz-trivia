@@ -305,7 +305,9 @@ section{
     width: auto!important;
   }
 }
-
+button {
+    -webkit-appearance: none;
+}
 @media screen and (max-width: 700px) {
   body .center-vertical{
     position: relative;
