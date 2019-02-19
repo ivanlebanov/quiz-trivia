@@ -68,7 +68,7 @@ export default {
 
       })
       .catch(r => {
-        alert('error');
+        //alert('error');
         //dispatch("user/logout", null, { root:true })
       })
   },
@@ -105,7 +105,7 @@ export default {
         commit('SET_CURRENT_ROOM', data)
       })
       .catch(r => {
-        alert('error');
+        //alert('error');
       })
   },
   async message({
@@ -118,7 +118,7 @@ export default {
         // commit('SET_CURRENT_ROOM', data)
       })
       .catch(r => {
-        alert('error');
+        //alert('error');
       })
   },
   async startGame({
@@ -131,7 +131,7 @@ export default {
 
       })
       .catch(r => {
-        alert('error')
+        //alert('error')
       })
   },
 
