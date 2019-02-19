@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose').set('debug', true)
 const passport = require('passport')
+const path = require('path')
 const auth = require('./auth')
 const app = express()
 const server = app.listen(3000)
@@ -10,13 +11,16 @@ const user = require('./user.js')(io)
 const category = require('./category.js')(io)
 var VerifyToken = require('./VerifyToken')
 auth(passport)
-mongoose.connect('mongodb://jimbo:uniofpompey2019@ds123465.mlab.com:23465/quiz_trivia', { useNewUrlParser: true, useMongoClient: true })
+mongoose.connect('mongodb://jimbo:uniofpompey2019@ds123465.mlab.com:23465/quiz_trivia', {
+  useNewUrlParser: true,
+  useMongoClient: true
+})
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
   extended: true
 }))
 app.use(passport.initialize())
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', 'http://localhost:8082')
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, x-access-token')
   res.header('Access-Control-Allow-Credentials', 'true')
@@ -27,7 +31,7 @@ app.use(function (req, res, next) {
 
 let onlineUsers = {}
 
-io.on('connection', function (socket) {
+io.on('connection', function(socket) {
   socket.on('SET_SOCKET_USER', (userTokenOrId) => {
     if (!onlineUsers[userTokenOrId]) {
       onlineUsers[userTokenOrId] = []
@@ -55,7 +59,7 @@ io.on('connection', function (socket) {
 })
 let room = require('./room.js')(io, onlineUsers)
 
-app.get('/', (req, res) => res.sendStatus(200))
+//app.get('/', (req, res) => res.sendStatus(200))
 app.post('/auth/google', user.google_callback)
 app.get('/users', user.list)
 app.get('/user/:token', user.getByTokenOrId)
@@ -71,3 +75,5 @@ app.put('/room/:code/message', VerifyToken, room.message)
 app.put('/room/:code/user/:id', VerifyToken, room.kicKUser)
 app.get('/room/:code', VerifyToken, room.getOne)
 app.get('/ranking', room.getRanking)
+
+app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
