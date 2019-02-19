@@ -59,7 +59,6 @@ io.on('connection', function(socket) {
 })
 let room = require('./room.js')(io, onlineUsers)
 
-//app.get('/', (req, res) => res.sendStatus(200))
 app.post('/auth/google', user.google_callback)
 app.get('/users', user.list)
 app.get('/user/:token', user.getByTokenOrId)
@@ -82,6 +81,7 @@ app.get('/room/lobby/:id/lobby', (req, res) => {
   res.sendfile(path.join(__dirname, '..', 'client', 'dist'))
 })
 app.get('/ranking', (req, res) => {
+  res.json({ success: 'test' })
   res.sendfile(path.join(__dirname, '..', 'client', 'dist'))
 })
 app.use(express.static(path.join(__dirname, '..', 'client', 'dist')))
