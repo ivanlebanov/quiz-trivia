@@ -74,9 +74,7 @@ app.put('/room/:code/message', VerifyToken, room.message)
 app.put('/room/:code/user/:id', VerifyToken, room.kicKUser)
 app.get('/room/:code', VerifyToken, room.getOne)
 app.get('/api/ranking', room.getRanking)
-app.get('*', function (req, res) {
-  res.sendfile('index.html', { root: path.join(__dirname, '..', 'client', 'dist') })
-})
+
 app.get('/room/lobby/:id', (req, res) => {
   res.sendfile(path.join(__dirname, '..', 'client', 'dist'))
 })
