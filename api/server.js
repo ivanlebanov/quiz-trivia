@@ -62,10 +62,10 @@ app.get('/room/lobby/:id', (req, res) => {
   res.sendfile(path.join(__dirname, '..', 'client', 'dist'))
 })
 app.get('/room/lobby/:id/lobby', (req, res) => {
-  res.sendfile(path.join(__dirname, '..', 'client', 'dist'))
+  res.sendfile('index.html', { root: path.join(__dirname, '..', 'client', 'dist') })
 })
 app.get('/ranking', function (req, res) {
-  res.sendfile(path.join(__dirname, '..', 'client', 'dist'))
+  res.sendfile('index.html', { root: path.join(__dirname, '..', 'client', 'dist') })
 })
 app.post('/auth/google', user.google_callback)
 app.get('/users', user.list)
