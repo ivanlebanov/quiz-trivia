@@ -38,7 +38,7 @@ export default {
     commit,
     dispatch
   }, data) {
-    axios.get('http://api.trivia-quiz.xyz/users')
+    axios.get('http://trivia-quiz.xyz:3000/users')
       .then(users => commit('SET_USERS', users.data))
   },
   async login({
@@ -46,7 +46,7 @@ export default {
     commit,
     dispatch
   }, data) {
-    axios.post('http://api.trivia-quiz.xyz/auth/google', data)
+    axios.post('http://trivia-quiz.xyz:3000/auth/google', data)
       .then(dataObj => {
         axios.defaults.headers.common['x-access-token'] = dataObj.data.token;
 
@@ -90,7 +90,7 @@ export default {
   }, data) {
     if (state.g_token) {
 
-      axios.get('http://api.trivia-quiz.xyz/user/' + state.id)
+      axios.get('http://trivia-quiz.xyz:3000/user/' + state.id)
         .then(data => {
           if (data.data) {
             if (state.g_token) {
@@ -118,7 +118,7 @@ export default {
     commit,
     dispatch
   }, data) {
-    axios.post('http://api.trivia-quiz.xyz/user', data)
+    axios.post('http://trivia-quiz.xyz:3000/user', data)
   }
 
 };
