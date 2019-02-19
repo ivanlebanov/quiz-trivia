@@ -65,7 +65,6 @@ app.get('/room/lobby/:id/lobby', (req, res) => {
   res.sendfile(path.join(__dirname, '..', 'client', 'dist'))
 })
 app.get('/ranking', function (req, res) {
-  res.json({ success: 'test' })
   res.sendfile(path.join(__dirname, '..', 'client', 'dist'))
 })
 app.post('/auth/google', user.google_callback)
