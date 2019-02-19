@@ -84,3 +84,7 @@ app.get('/ranking', function (req, res) {
   res.sendfile('index.html', { root: path.join(__dirname, '..', 'client', 'dist') })
 })
 app.use(express.static(path.join(__dirname, '..', 'client', 'dist')))
+
+app.use(function (req, res, next) {
+  res.sendfile('index.html', { root: path.join(__dirname, '..', 'client', 'dist') })
+})
