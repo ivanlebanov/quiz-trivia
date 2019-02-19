@@ -74,6 +74,14 @@ app.put('/room/:code/finish', VerifyToken, room.finishGame)
 app.put('/room/:code/message', VerifyToken, room.message)
 app.put('/room/:code/user/:id', VerifyToken, room.kicKUser)
 app.get('/room/:code', VerifyToken, room.getOne)
-app.get('/ranking', room.getRanking)
-
-app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
+app.get('/api/ranking', room.getRanking)
+app.get('/room/lobby/:id', (req, res) => {
+  express.static(path.join(__dirname, '..', 'client', 'dist'))
+})
+app.get('/room/lobby/:id/lobby', (req, res) => {
+  express.static(path.join(__dirname, '..', 'client', 'dist'))
+})
+app.get('/ranking', (req, res) => {
+  express.static(path.join(__dirname, '..', 'client', 'dist'))
+})
+app.use(express.static(path.join(__dirname, '..', 'client', 'dist')))
