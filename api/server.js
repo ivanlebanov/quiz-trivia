@@ -78,7 +78,7 @@ app.get('/api/ranking', room.getRanking)
 app.get('/room/lobby/:id', (req, res) => {
   res.sendfile(path.join(__dirname, '..', 'client', 'dist'))
 })
-app.get('/room/lobby/:id/lobby', (req, res) => {
+app.get('/room/lobby/:id/quiz', (req, res) => {
   res.sendfile('index.html', { root: path.join(__dirname, '..', 'client', 'dist') })
 })
 app.get('/ranking', function (req, res) {
