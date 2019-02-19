@@ -43,7 +43,7 @@ const config = {
     ],
   },
   plugins: [
-    new VueLoaderPlugin(),
+    new VueLoaderPlugin,
     new HtmlWebpackPlugin({
       filename: path.join(__dirname, 'dist', 'index.html'),
       template: path.join(__dirname, 'static', 'index.html'),
