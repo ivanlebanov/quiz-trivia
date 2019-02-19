@@ -1,7 +1,7 @@
 'use strict'
 
 const merge = require('webpack-merge')
-const baseConfig = require('./webpack.base.config')
+const baseConfig = require('./webpack.base.conf')
 const MiniCssExtractPlugin  = require('mini-css-extract-plugin')
 
 module.exports = merge(baseConfig, {
