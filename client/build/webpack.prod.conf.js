@@ -3,6 +3,7 @@
 const merge = require('webpack-merge')
 const baseConfig = require('./webpack.base.conf')
 const MiniCssExtractPlugin  = require('mini-css-extract-plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = merge(baseConfig, {
   mode: 'production',
@@ -36,6 +37,7 @@ module.exports = merge(baseConfig, {
     ]
   },
   plugins: [
+    new VueLoaderPlugin(),
     new MiniCssExtractPlugin({
       filename: 'main.css'
     })
