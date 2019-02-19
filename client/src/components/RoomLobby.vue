@@ -148,32 +148,5 @@ export default {
 </script>
 
 <style lang="scss">
-.user-list {
-  list-style: none;
-  float: left;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  .btn {
-    float: right;
-    margin: -19px 0 0;
-  }
-  li {
-    margin-bottom: 10px;
-    display: block;
-    float: left;
-    width: 100%;
-    div {
-      padding-top: 1em;
-    }
-  }
-  img {
-    box-shadow: 0 1px 20px 0 rgba(46, 61, 73, 0.2);
-    border-radius: 50%;
-    display: block;
-    float: left;
-    max-width: 50px;
-    margin: 0 1em 0 0;
-  }
-}
+
 </style>

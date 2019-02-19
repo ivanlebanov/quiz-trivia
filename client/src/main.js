@@ -15,14 +15,14 @@ Vue.use(Meta)
 Vue.use(Notifications)
 Vue.use(new VueSocketIO({
   debug: true,
-  connection: 'http://localhost:3000',
+  connection: 'http://api.trivia-quiz.xyz',
   vuex: {
     store,
     actionPrefix: 'SOCKET_',
     mutationPrefix: 'SOCKET_'
   }
 }))
-if(localStorage.getItem('g_token')) {
+if (localStorage.getItem('g_token')) {
   axios.defaults.headers.common['x-access-token'] = localStorage.getItem('g_token')
 }
 
