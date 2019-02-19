@@ -58,7 +58,12 @@ io.on('connection', function(socket) {
   })
 })
 let room = require('./room.js')(io, onlineUsers)
-
+app.get('/room/lobby/:id', (req, res) => {
+  res.sendfile(path.join(__dirname, '..', 'client', 'dist'))
+})
+app.get('/room/lobby/:id/quiz', (req, res) => {
+  res.sendfile('index.html', { root: path.join(__dirname, '..', 'client', 'dist') })
+})
 app.post('/auth/google', user.google_callback)
 app.get('/users', user.list)
 app.get('/user/:token', user.getByTokenOrId)
@@ -75,12 +80,6 @@ app.put('/room/:code/user/:id', VerifyToken, room.kicKUser)
 app.get('/room/:code', VerifyToken, room.getOne)
 app.get('/api/ranking', room.getRanking)
 
-app.get('/room/lobby/:id', (req, res) => {
-  res.sendfile(path.join(__dirname, '..', 'client', 'dist'))
-})
-app.get('/room/lobby/:id/quiz', (req, res) => {
-  res.sendfile('index.html', { root: path.join(__dirname, '..', 'client', 'dist') })
-})
 app.get('/ranking', function (req, res) {
   res.sendfile('index.html', { root: path.join(__dirname, '..', 'client', 'dist') })
 })
