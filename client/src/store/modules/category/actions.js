@@ -10,7 +10,7 @@ export default {
     commit,
     dispatch
   }, data) {
-    axios.get('http://trivia-quiz.xyz:3000/categories')
+    axios.get('http://trivia-quiz.xyz/categories')
       .then(categories => commit('SET_CATEGORIES', categories.data))
   }
 

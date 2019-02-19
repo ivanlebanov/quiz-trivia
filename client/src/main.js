@@ -15,7 +15,7 @@ Vue.use(Meta)
 Vue.use(Notifications)
 Vue.use(new VueSocketIO({
   debug: true,
-  connection: 'http://trivia-quiz.xyz:3000',
+  connection: 'http://trivia-quiz.xyz',
   vuex: {
     store,
     actionPrefix: 'SOCKET_',
