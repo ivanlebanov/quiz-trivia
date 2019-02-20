@@ -9,7 +9,7 @@ const path = require('path')
 const auth = require('./auth')
 const app = express()
 //const server = app.listen(80)
-const io = require('socket.io')
+let io = require('socket.io')
 const user = require('./user.js')(io)
 const category = require('./category.js')(io)
 var VerifyToken = require('./VerifyToken')
@@ -87,7 +87,7 @@ const httpsServer = https.createServer(credentials, app);
 
 httpServer.listen(80, (server) => {
   console.log('HTTP Server running on port 80');
-
+  io = io.listen(httpServer)
   io.on('connection', function(socket) {
     socket.on('SET_SOCKET_USER', (userTokenOrId) => {
       if (!onlineUsers[userTokenOrId]) {
@@ -114,11 +114,11 @@ httpServer.listen(80, (server) => {
       io.emit('USERS_ONLINE', onlineUsers)
     })
   })
-  io = io.listen(httpServer)
+
 });
 
 httpsServer.listen(443, (server) => {
-
+  io = io.listen(httpsServer)
   io.on('connection', function(socket) {
     socket.on('SET_SOCKET_USER', (userTokenOrId) => {
       if (!onlineUsers[userTokenOrId]) {
@@ -145,7 +145,7 @@ httpsServer.listen(443, (server) => {
       io.emit('USERS_ONLINE', onlineUsers)
     })
   })
-  io = io.listen(httpsServer)
+
   console.log('HTTPS Server running on port 443');
 
 });
