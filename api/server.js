@@ -17,7 +17,7 @@ auth(passport)
 const privateKey = fs.readFileSync('./sslforfree/private.key', 'utf8');
 const certificate = fs.readFileSync('./sslforfree/certificate.crt', 'utf8');
 const ca = fs.readFileSync('./sslforfree/ca_bundle.crt', 'utf8');
-
+let onlineUsers = {}
 const credentials = {
   key: privateKey,
   cert: certificate,
@@ -41,34 +41,7 @@ app.use(function(req, res, next) {
   next()
 })
 
-let onlineUsers = {}
 
-io.on('connection', function(socket) {
-  socket.on('SET_SOCKET_USER', (userTokenOrId) => {
-    if (!onlineUsers[userTokenOrId]) {
-      onlineUsers[userTokenOrId] = []
-    }
-    onlineUsers[userTokenOrId].push(socket.id)
-    io.emit('USERS_ONLINE', onlineUsers)
-  })
-
-  socket.on('disconnect', (userTokenOrId) => {
-    let users = Object.keys(onlineUsers)
-
-    for (var i = 0; i < users.length; i++) {
-      for (var m = 0; m < onlineUsers[users[i]].length; m++) {
-        if (onlineUsers[users[i]][m] === socket.id) {
-          onlineUsers[users[i]].splice(m, 1)
-        }
-      }
-      if (onlineUsers[users[i]].length === 0) {
-        delete onlineUsers[users[i]]
-      }
-    }
-
-    io.emit('USERS_ONLINE', onlineUsers)
-  })
-})
 let room = require('./room.js')(io, onlineUsers)
 app.get('/room/lobby/:id', (req, res) => {
   res.sendfile(path.join(__dirname, '..', 'client', 'dist'))
@@ -114,10 +87,64 @@ const httpsServer = https.createServer(credentials, app);
 
 httpServer.listen(80, (server) => {
   console.log('HTTP Server running on port 80');
+
+  io.on('connection', function(socket) {
+    socket.on('SET_SOCKET_USER', (userTokenOrId) => {
+      if (!onlineUsers[userTokenOrId]) {
+        onlineUsers[userTokenOrId] = []
+      }
+      onlineUsers[userTokenOrId].push(socket.id)
+      io.emit('USERS_ONLINE', onlineUsers)
+    })
+
+    socket.on('disconnect', (userTokenOrId) => {
+      let users = Object.keys(onlineUsers)
+
+      for (var i = 0; i < users.length; i++) {
+        for (var m = 0; m < onlineUsers[users[i]].length; m++) {
+          if (onlineUsers[users[i]][m] === socket.id) {
+            onlineUsers[users[i]].splice(m, 1)
+          }
+        }
+        if (onlineUsers[users[i]].length === 0) {
+          delete onlineUsers[users[i]]
+        }
+      }
+
+      io.emit('USERS_ONLINE', onlineUsers)
+    })
+  })
   io = io.listen(httpServer)
 });
 
 httpsServer.listen(443, (server) => {
+
+  io.on('connection', function(socket) {
+    socket.on('SET_SOCKET_USER', (userTokenOrId) => {
+      if (!onlineUsers[userTokenOrId]) {
+        onlineUsers[userTokenOrId] = []
+      }
+      onlineUsers[userTokenOrId].push(socket.id)
+      io.emit('USERS_ONLINE', onlineUsers)
+    })
+
+    socket.on('disconnect', (userTokenOrId) => {
+      let users = Object.keys(onlineUsers)
+
+      for (var i = 0; i < users.length; i++) {
+        for (var m = 0; m < onlineUsers[users[i]].length; m++) {
+          if (onlineUsers[users[i]][m] === socket.id) {
+            onlineUsers[users[i]].splice(m, 1)
+          }
+        }
+        if (onlineUsers[users[i]].length === 0) {
+          delete onlineUsers[users[i]]
+        }
+      }
+
+      io.emit('USERS_ONLINE', onlineUsers)
+    })
+  })
   io = io.listen(httpsServer)
   console.log('HTTPS Server running on port 443');
 
