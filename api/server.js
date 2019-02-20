@@ -70,8 +70,14 @@ io.on('connection', function(socket) {
   })
 })
 let room = require('./room.js')(io, onlineUsers)
-
-//app.get('/', (req, res) => res.sendStatus(200))
+app.get('/room/lobby/:id', (req, res) => {
+  res.sendfile(path.join(__dirname, '..', 'client', 'dist'))
+})
+app.get('/room/lobby/:id/quiz', (req, res) => {
+  res.sendfile('index.html', {
+    root: path.join(__dirname, '..', 'client', 'dist')
+  })
+})
 app.post('/auth/google', user.google_callback)
 app.get('/users', user.list)
 app.get('/user/:token', user.getByTokenOrId)
@@ -86,9 +92,22 @@ app.put('/room/:code/finish', VerifyToken, room.finishGame)
 app.put('/room/:code/message', VerifyToken, room.message)
 app.put('/room/:code/user/:id', VerifyToken, room.kicKUser)
 app.get('/room/:code', VerifyToken, room.getOne)
-app.get('/ranking', room.getRanking)
+app.get('/api/ranking', room.getRanking)
 
 app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
+
+app.get('/ranking', function(req, res) {
+  res.sendfile('index.html', {
+    root: path.join(__dirname, '..', 'client', 'dist')
+  })
+})
+app.use(express.static(path.join(__dirname, '..', 'client', 'dist')))
+
+app.use(function(req, res, next) {
+  res.sendfile('index.html', {
+    root: path.join(__dirname, '..', 'client', 'dist')
+  })
+})
 
 const httpServer = http.createServer(app);
 const httpsServer = https.createServer(credentials, app);

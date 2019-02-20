@@ -91,7 +91,7 @@ export default {
     commit,
     dispatch
   }, data) {
-    axios.get(`https://trivia-quiz.xyz/ranking`).then(room => {
+    axios.get(`https://trivia-quiz.xyz/api/ranking`).then(room => {
       commit('SET_RANKING', room.data)
     })
   },

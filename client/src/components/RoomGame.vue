@@ -167,6 +167,17 @@ export default {
       var objDiv = document.getElementById("messages");
       objDiv.scrollTop = objDiv.scrollHeight;
     },
+    addMessage(){
+      if(this.message){
+        this.$store.dispatch('room/message', {
+          code: this.$route.params.code,
+          message: this.message
+        }).then(r => {
+          this.message = ''
+          this.scrollToBottom()
+        })
+      }
+    },
     even(arr) {
       // Set slice() to avoid to generate an infinite loop!
       return arr.slice().sort(function(a, b) {
