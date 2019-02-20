@@ -2,15 +2,27 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose').set('debug', true)
 const passport = require('passport')
+const fs = require('fs')
+const http = require('http')
+const https = require('https')
 const path = require('path')
 const auth = require('./auth')
 const app = express()
-const server = app.listen(80)
-const io = require('socket.io').listen(server)
+//const server = app.listen(80)
+const io = require('socket.io')
 const user = require('./user.js')(io)
 const category = require('./category.js')(io)
 var VerifyToken = require('./VerifyToken')
 auth(passport)
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/trivia-quiz.xyz/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/trivia-quiz.xyz/cert.pem', 'utf8');
+const ca = fs.readFileSync('/etc/letsencrypt/live/trivia-quiz.xyz/chain.pem', 'utf8');
+
+const credentials = {
+  key: privateKey,
+  cert: certificate,
+  ca: ca
+};
 mongoose.connect('mongodb://jimbo:uniofpompey2019@ds123465.mlab.com:23465/quiz_trivia', {
   useNewUrlParser: true,
   useMongoClient: true
@@ -77,3 +89,17 @@ app.get('/room/:code', VerifyToken, room.getOne)
 app.get('/ranking', room.getRanking)
 
 app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
+
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(credentials, app);
+
+httpServer.listen(80, (server) => {
+  console.log('HTTP Server running on port 80');
+  io = io.listen(server)
+});
+
+httpsServer.listen(443, (server) => {
+  io = io.listen(server)
+  console.log('HTTPS Server running on port 443');
+
+});

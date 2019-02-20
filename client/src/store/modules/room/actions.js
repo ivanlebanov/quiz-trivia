@@ -10,7 +10,7 @@ export default {
     commit,
     dispatch
   }, data) {
-    axios.post('http://trivia-quiz.xyz/room', data)
+    axios.post('https://trivia-quiz.xyz/room', data)
       .then(room => {
         router.push({
           name: 'RoomLobby',
@@ -28,7 +28,7 @@ export default {
     commit,
     dispatch
   }, data) {
-    axios.get(`http://trivia-quiz.xyz/room/${data}`)
+    axios.get(`https://trivia-quiz.xyz/room/${data}`)
       .then(room => {
         console.log(room.data);
         commit('SET_CURRENT_ROOM', room.data)
@@ -49,7 +49,7 @@ export default {
     commit,
     dispatch
   }, data) {
-    axios.put(`http://trivia-quiz.xyz/room/${data.code}`)
+    axios.put(`https://trivia-quiz.xyz/room/${data.code}`)
       .then(room => {
         if (room.data.error) {
           Vue.notify({
@@ -77,21 +77,21 @@ export default {
     commit,
     dispatch
   }, data) {
-    axios.put(`http://trivia-quiz.xyz/room/${data.code}/points`, data)
+    axios.put(`https://trivia-quiz.xyz/room/${data.code}/points`, data)
   },
   async finishGame({
     state,
     commit,
     dispatch
   }, data) {
-    axios.put(`http://trivia-quiz.xyz/room/${data.code}/finish`, data)
+    axios.put(`https://trivia-quiz.xyz/room/${data.code}/finish`, data)
   },
   async ranking({
     state,
     commit,
     dispatch
   }, data) {
-    axios.get(`http://trivia-quiz.xyz/ranking`).then(room => {
+    axios.get(`https://trivia-quiz.xyz/ranking`).then(room => {
       commit('SET_RANKING', room.data)
     })
   },
@@ -100,7 +100,7 @@ export default {
     commit,
     dispatch
   }, data) {
-    axios.put(`http://trivia-quiz.xyz/room/${data.code}/user/${data.id}`)
+    axios.put(`https://trivia-quiz.xyz/room/${data.code}/user/${data.id}`)
       .then(room => {
         commit('SET_CURRENT_ROOM', data)
       })
@@ -113,7 +113,7 @@ export default {
     commit,
     dispatch
   }, data) {
-    axios.put(`http://trivia-quiz.xyz/room/${data.code}/message`, data)
+    axios.put(`https://trivia-quiz.xyz/room/${data.code}/message`, data)
       .then(room => {
         // commit('SET_CURRENT_ROOM', data)
       })
@@ -126,7 +126,7 @@ export default {
     commit,
     dispatch
   }, data) {
-    axios.put(`http://trivia-quiz.xyz/room/${data.code}/start`)
+    axios.put(`https://trivia-quiz.xyz/room/${data.code}/start`)
       .then(room => {
 
       })
