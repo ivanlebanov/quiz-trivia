@@ -14,9 +14,9 @@ const user = require('./user.js')(io)
 const category = require('./category.js')(io)
 var VerifyToken = require('./VerifyToken')
 auth(passport)
-const privateKey = fs.readFileSync('/sslforfree/private.key', 'utf8');
-const certificate = fs.readFileSync('/sslforfree/certificate.crt', 'utf8');
-const ca = fs.readFileSync('/sslforfree/ca_bundle.crt', 'utf8');
+const privateKey = fs.readFileSync('./sslforfree/private.key', 'utf8');
+const certificate = fs.readFileSync('./sslforfree/certificate.crt', 'utf8');
+const ca = fs.readFileSync('./sslforfree/ca_bundle.crt', 'utf8');
 
 const credentials = {
   key: privateKey,
